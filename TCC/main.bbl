@@ -1,0 +1,104 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Bass, Weber e Zhu 2015]{bass2015}
+\abntrefinfo{Bass, Weber e Zhu}{BASS; WEBER; ZHU}{2015}
+{BASS, L.; WEBER, I.; ZHU, L. \emph{DevOps: A Software Architect's
+  Perspective}. Boston, EUA: Addison-Wesley Professional, 2015.
+ISBN 978-0134049847.}
+
+\bibitem[Burns et al. 2016]{burns2016}
+\abntrefinfo{Burns et al.}{BURNS et al.}{2016}
+{BURNS, B. et al. Borg, omega, and kubernetes: Lessons learned from three
+  container-management systems over a decade.
+\emph{Communications of the ACM}, ACM New York, NY, USA, v.~59, n.~5, p.
+  70--79, 2016.}
+
+\bibitem[Combes e Petazzoni 2016]{combes2016}
+\abntrefinfo{Combes e Petazzoni}{COMBES; PETAZZONI}{2016}
+{COMBES, J.; PETAZZONI, J. \emph{Docker in Practice}. Shelter Island, NY:
+  Manning Publications, 2016.
+ISBN 978-1617292729.}
+
+\bibitem[Felter et al. 2015]{felter2015}
+\abntrefinfo{Felter et al.}{FELTER et al.}{2015}
+{FELTER, W. et al. An updated performance comparison of virtual machines and
+  linux containers. In:  IEEE. \emph{IEEE International Symposium on
+  Performance Analysis of Systems and Software (ISPASS)}. [S.l.], 2015. p.
+  171--172.}
+
+\bibitem[Fowler 2006]{fowler2006}
+\abntrefinfo{Fowler}{FOWLER}{2006}
+{FOWLER, M. \emph{Continuous Integration}. Boston, EUA: Addison-Wesley, 2006.}
+
+\bibitem[Humble e Farley 2010]{humble2010}
+\abntrefinfo{Humble e Farley}{HUMBLE; FARLEY}{2010}
+{HUMBLE, J.; FARLEY, D. \emph{Continuous Delivery: Reliable Software Releases
+  through Build, Test, and Deployment Automation}. Boston, EUA: Addison-Wesley
+  Professional, 2010.
+ISBN 978-0321601919.}
+
+\bibitem[Merkel 2014]{merkel2014}
+\abntrefinfo{Merkel}{MERKEL}{2014}
+{MERKEL, D. Docker: lightweight linux containers for consistent development and
+  deployment.
+\emph{Linux Journal}, v.~2014, n.~239, p.~2, 2014.}
+
+\bibitem[Newman 2021]{newman2021}
+\abntrefinfo{Newman}{NEWMAN}{2021}
+{NEWMAN, S. \emph{Building Microservices: Designing Fine-Grained Systems}. 2.
+  ed. Sebastopol, CA: O'Reilly Media, 2021.
+ISBN 978-1492034025.}
+
+\bibitem[{OWASP Foundation} 2021]{owasp2021}
+\abntrefinfo{{OWASP Foundation}}{{OWASP Foundation}}{2021}
+{{OWASP Foundation}. \emph{OWASP Top 10: 2021 The Ten Most Critical Web
+  Application Security Risks}. 2021. \url{https://owasp.org/Top10/}.
+Acesso em: 15 out. 2026.}
+
+\bibitem[Pressman e Maxim 2016]{pressman2014}
+\abntrefinfo{Pressman e Maxim}{PRESSMAN; MAXIM}{2016}
+{PRESSMAN, R.~S.; MAXIM, B.~R. \emph{Engenharia de Software: Uma Abordagem
+  Profissional}. 8. ed. Porto Alegre: AMGH Editora, 2016.
+ISBN 978-8580555332.}
+
+\bibitem[Silberschatz, Galvin e Gagne 2018]{silberschatz2018}
+\abntrefinfo{Silberschatz, Galvin e Gagne}{SILBERSCHATZ; GALVIN; GAGNE}{2018}
+{SILBERSCHATZ, A.; GALVIN, P.~B.; GAGNE, G. \emph{Operating System Concepts}.
+  10. ed. Hoboken, NJ: John Wiley \& Sons, 2018.
+ISBN 978-1119456339.}
+
+\bibitem[Sommerville 2011]{sommerville2011}
+\abntrefinfo{Sommerville}{SOMMERVILLE}{2011}
+{SOMMERVILLE, I. \emph{Engenharia de Software}. 9. ed. São Paulo: Pearson,
+  2011.
+ISBN 978-8579361081.}
+
+\bibitem[Stallings 2017]{stallings2017}
+\abntrefinfo{Stallings}{STALLINGS}{2017}
+{STALLINGS, W. \emph{Cryptography and Network Security: Principles and
+  Practice}. 7. ed. London, UK: Pearson, 2017.
+ISBN 978-0134444284.}
+
+\bibitem[Stonebraker e Rowe 1986]{stonebraker1986}
+\abntrefinfo{Stonebraker e Rowe}{STONEBRAKER; ROWE}{1986}
+{STONEBRAKER, M.; ROWE, L.~A. \emph{The design of POSTGRES}. [S.l.]: ACM, 1986.
+  v.~15. 340--355~p.}
+
+\bibitem[Wiggins 2017]{wiggins2017}
+\abntrefinfo{Wiggins}{WIGGINS}{2017}
+{WIGGINS, A. \emph{The Twelve-Factor App}. 2017. \url{https://12factor.net/}.
+Acesso em: 10 out. 2026.}
+
+\bibitem[Xavier et al. 2013]{xavier2013}
+\abntrefinfo{Xavier et al.}{XAVIER et al.}{2013}
+{XAVIER, M.~G. et al. Performance evaluation of container-based virtualization
+  for high performance computing environments. In:  IEEE. \emph{21st Euromicro
+  International Conference on Parallel, Distributed, and Network-Based
+  Processing}. [S.l.], 2013. p. 233--240.}
+
+\end{thebibliography}

@@ -1,0 +1,22 @@
+% ==============================================================================
+% ANEXO B - CRITÉRIOS DE PONDERAÇÃO DA MATRIZ COMPARATIVA DE PAAS
+% ==============================================================================
+
+\section{Critérios de Ponderação do Catálogo de Funcionalidades PaaS}
+\label{anx:anexo-b}
+
+Este anexo descreve os critérios e os pesos atribuídos aos requisitos arquiteturais avaliados pela sonda autônoma na geração do \textit{score} global comparativo entre as plataformas PaaS:
+
+\begin{itemize}
+    \item \textbf{WAF Integrado com Bloqueio de Injeções (Peso 5):} Requisito crítico de segurança defensiva perimetral;
+    \item \textbf{Criptografia de Segredos em Repouso via Fernet (Peso 5):} Imprescindível para conformidade de dados e proteção de credenciais;
+    \item \textbf{Detecção Automática de Dockerfile / GitOps (Peso 5):} Elemento central para experiência do desenvolvedor e automação de entrega;
+    \item \textbf{Rollback Automático Instantâneo (Peso 5):} Mecanismo fundamental de resiliência e continuidade de negócios;
+    \item \textbf{Roteamento Dinâmico com Certificados Wildcard (Peso 5):} Automação completa de infraestrutura de rede e segurança de transporte;
+    \item \textbf{Ajuste Dinâmico de Quotas de CPU/RAM em Execução (Peso 5):} Capacidade avançada de gestão sem interrupção de contêineres;
+    \item \textbf{Bancos de Dados Gerenciados com Persistência (Peso 5):} Suporte a dados transacionais como serviço de primeira classe;
+    \item \textbf{Backups Automatizados em Nuvem S3 com SigV4 (Peso 5):} Estratégia mandatória de recuperação de desastres (\textit{Disaster Recovery});
+    \item \textbf{Hardening de Contêiner e Isolamento de Recursos (Peso 4):} Aplicação de \texttt{no-new-privileges} e limite de processos no kernel;
+    \item \textbf{Terminal Web com Auditoria Defensiva (Peso 4):} Prevenção contra destruição acidental ou ataques de dentro do contêiner;
+    \item \textbf{Monitoramento de Uptime com Auto-Heal (Peso 4):} Recuperação autônoma frente a travamentos de processos.
+\end{itemize}

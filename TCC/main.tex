@@ -1,0 +1,387 @@
+%% =============================================================================
+%% Projeto Base - Artigo de TCC com abnTeX2
+%% Customizado para a UNIJUÍ
+%% Template desenvolvido e mantido por: Prof. Eldair F. Dornelles
+%% A versão mais atualizada deste template pode ser obtida no GitHub:
+%% https://github.com/dornelles/tcc-artigo-template-latex
+%% Qualquer sugestão de melhoria será bem vinda, 
+%% Contato pelo e-mail: eldair.dornelles@unijui.edu.br
+%% =============================================================================
+
+\documentclass[
+    12pt,               % tamanho da fonte
+    oneside,            % para impressão frente e verso (use oneside para apenas frente)
+    a4paper,            % tamanho do papel
+    chapter=TITLE,      % títulos de capítulos em maiúsculas
+    section=TITLE,      % títulos de seções em maiúsculas
+    english,            % idioma adicional para hifenização
+    brazil,             % o último idioma é o principal do documento
+    article             % formatação como artigo
+]{abntex2}
+
+% ==============================================================================
+% PACOTES ESSENCIAIS
+% ==============================================================================
+
+% --- Codificação e fontes ---
+\usepackage[T1]{fontenc}        % seleção de códigos de fonte
+\usepackage[utf8]{inputenc}     % codificação do documento (conversão automática dos acentos)
+% \usepackage{lmodern}          % comentado: a fonte agora está definida no arquivo unijui.sty
+
+% --- Pacotes de citações ---
+\usepackage[brazilian,hyperpageref]{backref}  % páginas com as citações na bibl
+\usepackage[alf,bibjustif]{abntex2cite}        % citações padrão ABNT (bibjustif = referências justificadas)
+
+% --- Pacotes matemáticos ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% --- Pacotes gráficos ---
+\usepackage{graphicx}           % inclusão de gráficos
+% NOTA: NÃO usar \usepackage{float} com abnTeX2/memoir - conflita com \newfloat
+\usepackage{subfig}             % subfiguras
+\usepackage{pdfpages}           % inclusão de páginas PDF
+
+% --- Pacotes de tabelas ---
+\usepackage{booktabs}           % tabelas profissionais
+\usepackage{multirow}           % células que ocupam várias linhas
+\usepackage{longtable}          % tabelas longas (múltiplas páginas)
+\usepackage{array}              % personalização de colunas
+
+% --- Outros pacotes úteis ---
+\usepackage{microtype}          % melhorias de justificação
+\usepackage{indentfirst}        % indenta o primeiro parágrafo de cada seção
+\usepackage{color}              % controle de cores
+\usepackage{xcolor}             % cores avançadas
+\usepackage{listings}           % listagens de código-fonte
+\usepackage{enumitem}           % listas personalizadas
+\usepackage{lipsum}             % geração de texto fictício (remover na versão final)
+\usepackage{totcount}           % conta o total de floats (figuras, tabelas, etc.) no documento
+
+% --- Customizações UNIJUÍ ---
+\input{unijui.sty}
+
+% ==============================================================================
+% CONFIGURAÇÕES DO PACOTE BACKREF
+% ==============================================================================
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+    \ifcase #1 %
+        Nenhuma citação no texto.%
+    \or
+        Citado na página #2.%
+    \else
+        Citado #1 vezes nas páginas #2.%
+    \fi}%
+
+% ==============================================================================
+% CONFIGURAÇÕES DE LISTAGENS DE CÓDIGO
+% ==============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    rulecolor=\color{black},
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    escapeinside={\%*}{*)},
+    literate=
+        {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+        {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+        {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+        {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1
+        {ê}{{\^e}}1 {â}{{\^a}}1 {ô}{{\^o}}1
+}
+
+% ==============================================================================
+% DADOS DO TRABALHO
+% ==============================================================================
+
+% --- Informações do documento (preencher conforme o trabalho) ---
+
+\titulo{DEPLOYDOCK: ARQUITETURA, IMPLEMENTAÇÃO E AVALIAÇÃO EMPÍRICA DE UMA PLATAFORMA COMO SERVIÇO (PaaS) AUTOHOSPEDADA COM FOCO EM HARDENING DE CONTÊINERES E GITOPS}
+% \subtitulo{Subtítulo (se houver)}
+
+\tituloemingles{DEPLOYDOCK: ARCHITECTURE, IMPLEMENTATION AND EMPIRICAL EVALUATION OF A SELF-HOSTED PLATFORM AS A SERVICE (PAAS) FOCUSED ON CONTAINER HARDENING AND GITOPS}
+% \subtituloemingles{Subtitle (if any)}
+
+\autor{Jean Kronbauer de Moura}
+\local{Ijuí/RS}
+\data{2026}
+\orientador{Prof. Marcos Ronaldo Melo Cavalheiro}
+\instituicao{%
+    Universidade Regional do Noroeste do\\[1mm]
+    Estado do Rio Grande do Sul
+}
+
+% -- Autores para o artigo --
+\autoresartigo{
+    Jean Kronbauer de Moura
+    \thanks{Estudante do Curso de Ciência da Computação -- UNIJUÍ, Ijuí-RS, Brasil. E-mail: \texttt{jean.moura@sou.unijui.edu.br}} 
+    \and 
+    Marcos Ronaldo Melo Cavalheiro
+    \thanks{Professor Orientador -- UNIJUÍ, Ijuí-RS, Brasil. E-mail: \texttt{marcos.cavalheiro@unijui.edu.br}}
+}
+
+% --- Informações específicas da UNIJUÍ (definidas no unijui.sty) ---
+\campus{Ijuí}
+\curso{Ciência da Computação}
+\professordabanca{Prof. Marcos Ronaldo Melo Cavalheiro}
+\datadabanca{03}{Nov}{2026}
+
+% --- Preâmbulo (texto da folha de rosto e aprovação) ---
+\preambulo{Trabalho de Conclusão de Curso apresentado ao Curso de Ciência da Computação da 
+            Universidade Regional do Noroeste do Estado do Rio Grande do Sul - UNIJUÍ,
+            como requisito parcial para a obtenção do título de Bacharel em Ciência da Computação}
+
+
+% --- Texto de apresentação ---
+\textoapresentacao{
+    O presente Trabalho de Conclusão de Curso, intitulado \textbf{``DEPLOYDOCK: ARQUITETURA, IMPLEMENTAÇÃO E AVALIAÇÃO EMPÍRICA DE UMA PLATAFORMA COMO SERVIÇO (PaaS) AUTOHOSPEDADA COM FOCO EM HARDENING DE CONTÊINERES E GITOPS''}, é submetido ao Colegiado do Curso de Ciência da Computação da Universidade Regional do Noroeste do Estado do Rio Grande do Sul (UNIJUÍ) como requisito para a obtenção do grau de Bacharel em Ciência da Computação. O documento organiza-se no formato de Artigo Científico estruturado segundo as normas da ABNT e as diretrizes do manual institucional da universidade. \par
+    A pesquisa investiga os desafios de sustentabilidade operacional, orquestração enxuta e segurança cibernética em infraestruturas autohospedadas, articulando a teoria de microsserviços e sistemas operacionais a um estudo empírico com baterias ponta a ponta e testes de estresse de hardware. Após as páginas pré-textuais, sucedem-se a Introdução, a Metodologia, o Referencial Teórico, o Desenvolvimento e Resultados, as Considerações Finais e os elementos pós-textuais (declaração de integridade no uso de ferramentas de IA, referências bibliográficas, apêndice e anexos comprobatórios).
+}
+
+% --- Resumo e Abstract ---
+\resumoemportugues{%
+A virtualização orientada a contêineres e a cultura DevOps revolucionaram o ciclo de desenvolvimento de software, tornando essencial a adoção de esteiras automatizadas de entrega contínua. Contudo, orquestradores como o Kubernetes apresentam elevada complexidade e sobrecarga computacional para servidores modestos e aplicações autohospedadas, enquanto plataformas PaaS de código aberto existentes frequentemente negligenciam proteções na camada de aplicação e o isolamento de privilégios em contêineres. Este trabalho apresenta o DeployDock, uma Plataforma como Serviço (PaaS) autohospedada, leve e orientada a GitOps desenvolvida em Python assíncrono (FastAPI), Docker SDK e proxy reverso Traefik v3. A solução incorpora um Web Application Firewall (WAF) ativo perimetral, cofre de variáveis de ambiente com criptografia Fernet (AES-128), ajuste dinâmico de quotas de CPU/RAM em tempo de execução sem interrupção de contêineres e rollback automatizado em falhas. Para validação experimental, construiu-se uma sonda autônoma independente submetendo a plataforma a 58 testes E2E, estresse multivariado de hardware e 11 testes transacionais no PostgreSQL 16. Os resultados comprovaram 100\% de aprovação funcional e bloqueio defensivo de ataques de SQLi, XSS, Path Traversal e RCE, score de hardening de 95/100 sob Linux corporativo e cumprimento rigoroso das propriedades ACID sob vazão superior a 3.200 inserções/s, operando sob uma pegada basal de memória de apenas 79,2 MB em repouso.
+}
+\palavraschaveemportugues{computação em nuvem; plataforma como serviço; docker; orquestração de contêineres; segurança da informação; gitops.}
+
+\resumoemingles{
+Container-based virtualization and DevOps practices have deeply transformed the software development lifecycle, making continuous delivery pipelines paramount. However, complex orchestrators such as Kubernetes impose excessive cognitive and resource overhead for small-to-medium servers and self-hosted deployments, whereas existing open-source PaaS alternatives often lack integrated application-layer firewalls and strict container privilege isolation. This study presents DeployDock, a lightweight, self-hosted, GitOps-oriented Platform as a Service (PaaS) built with asynchronous Python (FastAPI), the Docker SDK, and Traefik v3 reverse proxy. The platform embeds an active Web Application Firewall (WAF) middleware, secret storage encryption via Fernet (AES-128), live dynamic CPU/RAM cgroup quota tuning without container downtime, and instant automated rollback upon health check failures. For empirical validation, an independent autonomous probe evaluated DeployDock against 58 E2E assertions, heavy multi-core hardware stress benchmarks, and 11 transactional tests targeting PostgreSQL 16. Experimental findings demonstrated a 100\% pass rate across all functional suites, robust perimeter mitigation against SQLi, XSS, Path Traversal, and RCE vectors, a 95/100 container hardening score under enterprise Linux, and strict compliance with ACID guarantees under bulk insertion rates exceeding 3,200 rows/second, all while maintaining a remarkably low memory footprint of only 79.2 MB at idle.
+}
+\palavraschaveemingles{cloud computing; platform as a service; docker; container orchestration; information security; gitops.}
+
+
+
+
+% ==============================================================================
+% CONFIGURAÇÕES DE APARÊNCIA DO PDF FINAL
+% ==============================================================================
+\makeatletter
+\hypersetup{
+    pdftitle={\@title},
+    pdfauthor={\@author},
+    pdfsubject={\imprimirpreambulo},
+    pdfcreator={LaTeX com abnTeX2},
+    pdfkeywords={abnt}{latex}{abntex}{abntex2}{artigo}{tcc},
+    colorlinks=true,        % false: links em caixas; true: links coloridos
+    linkcolor=black,        % cor dos links internos
+    citecolor=black,        % cor dos links para bibliografias
+    filecolor=black,        % cor dos links de arquivos
+    urlcolor=black,         % cor dos links de URLs
+    bookmarksdepth=4
+}
+\makeatother
+
+% ==============================================================================
+% ESPAÇAMENTOS ENTRE LINHAS E PARÁGRAFOS
+% ==============================================================================
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+
+
+% ==============================================================================
+% INÍCIO DO DOCUMENTO
+% ==============================================================================
+\begin{document}
+
+% Seleciona o idioma do documento
+\selectlanguage{brazil}
+
+% Retira espaço extra obsoleto entre as frases
+\frenchspacing
+
+% --- Imprimir página de créditos e marca d'água ---
+% \imprimirpaginadecreditos
+% \imprimirmarcadagua
+
+% ==========================================================================
+% ELEMENTOS PRÉ-TEXTUAIS
+% ==========================================================================
+\pretextual
+
+% --- Capa ---
+\imprimircapa
+
+% --- Folha de rosto ---
+% (o * indica que haverá a ficha bibliográfica)
+\imprimirfolhaderosto
+
+% --- Ficha catalográfica (inserir PDF gerado pela biblioteca) ---
+% \begin{fichacatalografica}
+%     \includepdf{fig_ficha_catalografica.pdf}
+% \end{fichacatalografica}
+
+% --- Folha da banca ---
+\imprimirfolhadabanca
+
+% --- Agradecimentos ---
+\begin{agradecimentos}
+    Agradeço primeiramente a Deus, pela dádiva da vida, saúde, força e clareza mental que me sustentaram ao longo de toda esta jornada acadêmica.
+
+    Aos meus pais e familiares, pelo amor incondicional, apoio irrestrito, sacrifícios diários e por acreditarem no meu potencial em cada etapa desta caminhada. A compreensão e o incentivo de vocês foram essenciais para transformar este sonho em realidade.
+
+    Ao meu orientador, Prof. Marcos Ronaldo Melo Cavalheiro, pela dedicação, confiança, valiosas orientações técnicas e acadêmicas, paciência e pelo compartilhamento generoso de conhecimento que nortearam o amadurecimento desta pesquisa.
+
+    Aos professores do Curso de Ciência da Computação da Universidade Regional do Noroeste do Estado do Rio Grande do Sul (UNIJUÍ), que com zelo e excelência contribuíram para minha sólida formação profissional, despertando a paixão pela investigação científica e pela computação aplicada.
+
+    Aos colegas de curso e amigos de jornada, pelos momentos de companheirismo, noites em claro resolvendo desafios de código, discussões enriquecedoras e pela amizade fraterna construída ao longo destes anos.
+
+    Por fim, a toda a comunidade de software livre e de código aberto, cujo espírito de cooperação global disponibiliza ferramentas indispensáveis para a democratização e o progresso da tecnologia.
+\end{agradecimentos}
+\clearpage
+
+% --- Epígrafe ---
+\begin{epigrafe}
+    \inserirepigrafe{Simplicity is prerequisite for reliability.}{Edsger W. Dijkstra}
+\end{epigrafe}
+\clearpage
+
+% --- Lista de ilustrações (só aparece se houver figuras) ---
+% Na primeira compilação os contadores podem ser 0; compile 2x para resultado correto.
+\ifnum\totvalue{figcount}>0
+    \pdfbookmark[0]{\listfigurename}{lof}
+    \listoffigures*
+    \clearpage
+\fi
+
+% --- Lista de quadros (só aparece se houver quadros) ---
+\ifnum\totvalue{quacount}>0
+    \pdfbookmark[0]{\listofquadrosname}{loq}
+    \listofquadros*
+    \clearpage
+\fi
+
+% --- Lista de tabelas (só aparece se houver tabelas) ---
+\ifnum\totvalue{tabcount}>0
+    \pdfbookmark[0]{\listtablename}{lot}
+    \listoftables*
+    \clearpage
+\fi
+
+% --- Lista de abreviaturas e siglas ---
+\begin{siglas}
+    \item[ACID] Atomicidade, Consistência, Isolamento e Durabilidade (\textit{Atomicity, Consistency, Isolation, Durability})
+    \item[AES] Padrão Avançado de Criptografia (\textit{Advanced Encryption Standard})
+    \item[API] Interface de Programação de Aplicações (\textit{Application Programming Interface})
+    \item[ASGI] Interface de Gateway de Servidor Assíncrono (\textit{Asynchronous Server Gateway Interface})
+    \item[CI/CD] Integração Contínua e Entrega Contínua (\textit{Continuous Integration / Continuous Delivery})
+    \item[CPU] Unidade Central de Processamento (\textit{Central Processing Unit})
+    \item[DoS] Negação de Serviço (\textit{Denial of Service})
+    \item[DSR] Pesquisa em Ciência do Design (\textit{Design Science Research})
+    \item[E2E] Ponta a Ponta (\textit{End-to-End})
+    \item[HMAC] Código de Autenticação de Mensagens Baseado em Hash (\textit{Hash-based Message Authentication Code})
+    \item[HTTP] Protocolo de Transferência de Hipertexto (\textit{Hypertext Transfer Protocol})
+    \item[HTTPS] Protocolo de Transferência de Hipertexto Seguro (\textit{Hypertext Transfer Protocol Secure})
+    \item[IOPS] Operações de Entrada/Saída por Segundo (\textit{Input/Output Operations Per Second})
+    \item[JWT] Token Web JSON (\textit{JSON Web Token})
+    \item[MFLOPS] Milhões de Operações de Ponto Flutuante por Segundo (\textit{Million Floating-Point Operations Per Second})
+    \item[OSI] Interconexão de Sistemas Abertos (\textit{Open Systems Interconnection})
+    \item[OWASP] Projeto Aberto de Segurança em Aplicações Web (\textit{Open Worldwide Application Security Project})
+    \item[PaaS] Plataforma como Serviço (\textit{Platform as a Service})
+    \item[PAT] Token de Acesso Pessoal (\textit{Personal Access Token})
+    \item[PID] Identificador de Processo (\textit{Process Identifier})
+    \item[RAM] Memória de Acesso Aleatório (\textit{Random Access Memory})
+    \item[RBAC] Controle de Acesso Baseado em Papéis (\textit{Role-Based Access Control})
+    \item[RCE] Execução Remota de Código (\textit{Remote Code Execution})
+    \item[SGBDR] Sistema de Gerenciamento de Banco de Dados Relacional
+    \item[SHA] Algoritmo de Hash Seguro (\textit{Secure Hash Algorithm})
+    \item[SQL] Linguagem de Consulta Estruturada (\textit{Structured Query Language})
+    \item[SQLi] Injeção de SQL (\textit{SQL Injection})
+    \item[SSRF] Falsificação de Requisição do Lado do Servidor (\textit{Server-Side Request Forgery})
+    \item[TLS] Segurança da Camada de Transporte (\textit{Transport Layer Security})
+    \item[TOTP] Senha Descartável Baseada em Tempo (\textit{Time-Based One-Time Password})
+    \item[TPS] Transações por Segundo (\textit{Transactions Per Second})
+    \item[TTFB] Tempo até o Primeiro Byte (\textit{Time To First Byte})
+    \item[WAF] Firewall de Aplicações Web (\textit{Web Application Firewall})
+    \item[WAL] Log de Pré-Gravação (\textit{Write-Ahead Logging})
+    \item[XSS] Scripting em Múltiplos Sites (\textit{Cross-Site Scripting})
+\end{siglas}
+
+% --- Sumário ---
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+
+% --- Página de Apresentação ---
+\begin{apresentacao}
+    \imprimirapresentacao
+\end{apresentacao}
+\newpage
+
+% --- Página de Resumo e Abstract ---
+\imprimirpaginaresumos
+
+
+% ==========================================================================
+% ELEMENTOS TEXTUAIS
+% ==========================================================================
+\textual
+
+% --- Inclusão dos capítulos ---
+\input{capitulos/01-introducao}
+\input{capitulos/02-metodologia}
+\input{capitulos/03-referencial-teorico}
+\input{capitulos/04-desenvolvimento}
+\input{capitulos/05-consideracoes-finais}
+
+% ==========================================================================
+% ELEMENTOS PÓS-TEXTUAIS
+% ==========================================================================
+\postextual
+
+% --- Declaração sobre o uso de IA generativa (opcional) ---
+% Remova ou comente a linha abaixo caso nenhuma ferramenta tenha sido utilizada.
+\input{declaracoes/declaracao-uso-ia}
+
+% --- Referências bibliográficas ---
+\bibliography{referencias}
+\newpage
+
+
+% --- Anexos ---
+\begin{anexosenv}
+    % %Imprime uma página indicando o início dos anexos
+    % \partanexos
+    \input{anexos/anexo-a}
+    \newpage
+    \input{anexos/anexo-b}
+\end{anexosenv}
+
+\newpage
+
+% --- Apêndices ---
+\begin{apendicesenv}
+    % %Imprime uma página indicando o início dos apêndices
+    % \partapendices
+
+    \input{apendices/apendice-a}
+\end{apendicesenv}
+
+% --- Índice remissivo (opcional) ---
+% \phantompart
+% \printindex
+
+\end{document}

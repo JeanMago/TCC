@@ -1,0 +1,96 @@
+% ==============================================================================
+% APÊNDICE A - CATÁLOGO DE TESTES E2E DA SONDA DE AUDITORIA DEPLOYDOCK
+% ==============================================================================
+
+\section{Catálogo dos Casos de Teste E2E da Sonda de Auditoria}
+\label{apd:apendice-a}
+
+Este apêndice lista os 58 casos de teste ponta a ponta (E2E) projetados e validados pelo aplicativo autônomo \textit{DeployDock Multi-Model Benchmark \& PaaS Tester Probe v2.2}, detalhando as funcionalidades e as asserções de segurança aplicadas à plataforma.
+
+\begin{enumerate}
+    \item \textbf{Módulo 1: Autenticação, RBAC e Controle de Acesso (6 Testes)}
+    \begin{itemize}
+        \item \texttt{auth\_login\_and\_token}: Fluxo OAuth2 Password Flow e emissão do token JWT assinado;
+        \item \texttt{auth\_profile\_rbac}: Validação de perfil autenticado e verificação do papel (\textit{role}) de administrador;
+        \item \texttt{auth\_invalid\_credentials\_guard}: Defesa contra credenciais incorretas com retorno HTTP 401;
+        \item \texttt{rbac\_privilege\_enforcement}: Bloqueio HTTP 403 para usuários no perfil \textit{Viewer} em rotas administrativas;
+        \item \texttt{auth\_totp\_2fa\_status}: Validação de suporte a 2FA via algoritmo TOTP (RFC 6238);
+        \item \texttt{auth\_sessions\_and\_policies}: Auditoria de sessões simultâneas e expiração de tokens ativos.
+    \end{itemize}
+
+    \item \textbf{Módulo 2: Segurança Ativa e Web Application Firewall (10 Testes)}
+    \begin{itemize}
+        \item \texttt{waf\_sqli\_blocking}: Bloqueio de injeção SQL clássica (\texttt{' OR '1'='1}) com retorno HTTP 403;
+        \item \texttt{waf\_blind\_sqli\_sleep}: Bloqueio de injeções cegas com funções de pausa (\texttt{pg\_sleep / WAITFOR});
+        \item \texttt{waf\_xss\_filter}: Interceptação de injeção de scripts no cliente (\texttt{<script>alert(1)</script>});
+        \item \texttt{waf\_path\_traversal\_linux}: Bloqueio de navegação relativa em diretórios (\texttt{../../etc/passwd});
+        \item \texttt{waf\_path\_traversal\_win}: Bloqueio de manipulação de caminhos em ambiente Windows (\texttt{..\\..\\windows\\win.ini});
+        \item \texttt{waf\_rce\_log4shell}: Bloqueio de expressões de execução remota JNDI (\texttt{\$\{jndi:ldap://...\}});
+        \item \texttt{waf\_reverse\_shell}: Detecção de descritores de redirecionamento de shell (\texttt{bash -i >\& /dev/tcp/...});
+        \item \texttt{anti\_ssrf\_git\_protection}: Validação e bloqueio de URLs de repositório apontando para redes privadas locais;
+        \item \texttt{security\_headers\_enforcement}: Presença dos 5 cabeçalhos estritos de proteção HTTP;
+        \item \texttt{ip\_auto\_ban\_brute\_force}: Banimento automático de IP após ultrapassagem do limite de falhas de autenticação.
+    \end{itemize}
+
+    \item \textbf{Módulo 3: Ciclo de Vida de Contêineres e Terminal Seguro (8 Testes)}
+    \begin{itemize}
+        \item \texttt{container\_list\_and\_inspection}: Consulta detalhada de metadados, redes e estados de execução;
+        \item \texttt{container\_live\_cgroup\_quotas}: Atualização dinâmica de cotas de memória e CPU sem reinicialização;
+        \item \texttt{container\_logs\_streaming}: Transmissão contínua de logs de execução via canal WebSocket;
+        \item \texttt{terminal\_web\_guarded}: Validação da sessão de console web interativo;
+        \item \texttt{terminal\_block\_docker\_sock}: Interceptação e bloqueio de tentativas de acesso a \texttt{/var/run/docker.sock};
+        \item \texttt{terminal\_block\_fork\_bomb}: Bloqueio da sintaxe de esgotamento de processos \texttt{:()\{ :|:\& \};:};
+        \item \texttt{terminal\_block\_root\_destroy}: Prevenção contra instruções destrutivas do sistema de arquivos (\texttt{rm -rf /});
+        \item \texttt{container\_hardening\_inspection}: Confirmação da presença de \texttt{no-new-privileges} e limite \texttt{pids.max=256}.
+    \end{itemize}
+
+    \item \textbf{Módulo 4: Explorador de Arquivos e Armazenamento (6 Testes)}
+    \begin{itemize}
+        \item \texttt{file\_explorer\_directory\_tree}: Listagem recursiva e navegação pela árvore de diretórios do contêiner;
+        \item \texttt{file\_explorer\_inplace\_edit}: Edição e gravação direta de arquivos de configuração em tempo real;
+        \item \texttt{file\_explorer\_upload\_base64}: Transferência segura de arquivos binários e texto via carga codificada;
+        \item \texttt{file\_explorer\_download\_binary}: Obtenção e validação de integridade de arquivos do contêiner;
+        \item \texttt{volume\_tar\_gz\_instant\_backup}: Compactação e exportação de volumes de dados em arquivo compactado;
+        \item \texttt{volume\_tar\_gz\_restore}: Restauração e descompactação de volumes em contêineres alvos.
+    \end{itemize}
+
+    \item \textbf{Módulo 5: GitOps, Roteamento e Implantação Contínua (12 Testes)}
+    \begin{itemize}
+        \item \texttt{gitops\_auto\_dockerfile}: Detecção e compilação de projetos sem arquivo Dockerfile explícito;
+        \item \texttt{gitops\_webhook\_hmac\_trigger}: Processamento de gatilhos automáticos de build via assinatura HMAC;
+        \item \texttt{gitops\_private\_repo\_token}: Clonagem de repositórios privados com tokens PAT descriptografados;
+        \item \texttt{gitops\_preview\_deployments}: Provisionamento de ambientes temporários isolados para Pull Requests;
+        \item \texttt{gitops\_healthcheck\_evaluation}: Monitoramento contínuo do endpoint de saúde após implantação;
+        \item \texttt{gitops\_automatic\_rollback}: Reversão imediata para a versão anterior estável em caso de falha de inicialização;
+        \item \texttt{traefik\_subdomain\_routing}: Alocação de subdomínio dinâmico e integração com proxy reverso Traefik v3;
+        \item \texttt{traefik\_route\_collision\_guard}: Prevenção contra colisão de caminhos e domínios duplicados;
+        \item \texttt{traefik\_tls\_wildcard\_readiness}: Verificação de parâmetros para provimento de certificados Let's Encrypt;
+        \item \texttt{fernet\_vault\_env\_encryption}: Confirmação de cifra de variáveis de ambiente no disco via AES-128;
+        \item \texttt{fernet\_vault\_runtime\_injection}: Injeção transparente de segredos em variáveis de processo do contêiner;
+        \item \texttt{deploy\_concurrency\_locking}: Bloqueio de compilações simultâneas conflitantes na mesma aplicação.
+    \end{itemize}
+
+    \item \textbf{Módulo 6: Bancos Gerenciados, PaaS e Backups Cloud (9 Testes)}
+    \begin{itemize}
+        \item \texttt{paas\_postgres\_managed\_provisioning}: Criação automatizada de contêiner PostgreSQL 16 com volume persistente;
+        \item \texttt{paas\_redis\_managed\_provisioning}: Inicialização de instância gerenciada de cache em memória Redis;
+        \item \texttt{paas\_mariadb\_managed\_provisioning}: Inicialização de instância gerenciada MariaDB/MySQL;
+        \item \texttt{paas\_mongodb\_managed\_provisioning}: Inicialização de banco de documentos NoSQL MongoDB;
+        \item \texttt{paas\_one\_click\_catalog}: Instanciação de modelos prontos da biblioteca (n8n, MinIO, Grafana);
+        \item \texttt{paas\_s3\_backup\_sigv4}: Realização de backup programado para nuvem compatível com AWS S3 SigV4;
+        \item \texttt{paas\_cloudflare\_r2\_minio\_support}: Teste de compatibilidade de credenciais para Cloudflare R2 e MinIO;
+        \item \texttt{paas\_cron\_scheduler\_app}: Agendamento de tarefas periódicas automatizadas por aplicação;
+        \item \texttt{paas\_failure\_heuristic\_diagnosis}: Motor de análise de erros de build com recomendação de correção.
+    \end{itemize}
+
+    \item \textbf{Módulo 7: Observabilidade, Telemetria e Notificações (7 Testes)}
+    \begin{itemize}
+        \item \texttt{telemetry\_cpu\_ram\_disk\_metrics}: Coleta em tempo real de estatísticas de consumo do hospedeiro;
+        \item \texttt{telemetry\_system\_prune\_cleanup}: Expurgo seguro de contêineres e imagens não utilizadas no Docker;
+        \item \texttt{uptime\_monitor\_http\_health}: Monitoramento em tempo real da disponibilidade e do tempo de resposta de URLs;
+        \item \texttt{uptime\_auto\_heal\_restart}: Reinicialização inteligente do contêiner quando o serviço HTTP atinge limite de falhas;
+        \item \texttt{notifications\_multichannel\_dispatch}: Envio de mensagens de alerta integradas (Discord, Slack, Telegram, SMTP);
+        \item \texttt{notifications\_history\_log}: Registro persistente do histórico de notificações emitidas;
+        \item \texttt{prometheus\_metrics\_endpoint}: Disponibilização de métricas do sistema no padrão de texto Prometheus.
+    \end{itemize}
+\end{enumerate}

@@ -1,0 +1,294 @@
+UNIVERSIDADE REGIONAL DO NOROESTE DO
+ESTADO DO RIO GRANDE DO SUL
+CURSO DE CIÊNCIA DA COMPUTAÇÃO
+
+JEAN KRONBAUER DE MOURA
+
+DEPLOYDOCK: ARQUITETURA, IMPLEMENTAÇÃO E AVALIAÇÃO EMPÍRICA DE
+UMA PLATAFORMA COMO SERVIÇO (PAAS) AUTOHOSPEDADA COM FOCO EM
+HARDENING DE CONTÊINERES E GITOPS
+
+Ijuí/RS
+2026
+
+JEAN KRONBAUER DE MOURA
+
+DEPLOYDOCK: ARQUITETURA, IMPLEMENTAÇÃO E AVALIAÇÃO EMPÍRICA DE
+UMA PLATAFORMA COMO SERVIÇO (PAAS) AUTOHOSPEDADA COM FOCO EM
+HARDENING DE CONTÊINERES E GITOPS
+
+Trabalho de Conclusão de Curso apresentado ao
+Curso de Ciência da Computação da Universidade Regional do Noroeste do Estado do Rio
+Grande do Sul - UNIJUÍ, como requisito parcial
+para a obtenção do título de Bacharel em Ciência
+da Computação.
+
+Orientador(a): Prof. Marcos Ronaldo
+Melo Cavalheiro
+
+Ijuí/RS
+2026
+
+JEAN KRONBAUER DE MOURA
+
+DEPLOYDOCK: ARQUITETURA, IMPLEMENTAÇÃO E AVALIAÇÃO EMPÍRICA DE
+UMA PLATAFORMA COMO SERVIÇO (PAAS) AUTOHOSPEDADA COM FOCO EM
+HARDENING DE CONTÊINERES E GITOPS
+
+Trabalho de Conclusão de Curso apresentado ao
+Curso de Ciência da Computação da Universidade Regional do Noroeste do Estado do Rio
+Grande do Sul - UNIJUÍ, como requisito parcial para a obtenção do título de Bacharel em
+Ciência da Computação, submetido à aprovação
+da banca examinadora composta pelos seguintes
+membros:
+
+Prof. Marcos Ronaldo Melo Cavalheiro
+Orientador(a)
+
+Prof. Marcos Ronaldo Melo Cavalheiro
+Membro da Banca
+
+Ijuí/RS, 03 de Nov de 2026
+
+AGRADECIMENTOS
+
+Agradeço primeiramente a Deus, pela dádiva da vida, saúde, força e clareza mental que
+me sustentaram ao longo de toda esta jornada acadêmica.
+Aos meus pais e familiares, pelo amor incondicional, apoio irrestrito, sacrifícios diários e
+por acreditarem no meu potencial em cada etapa desta caminhada. A compreensão e o incentivo
+de vocês foram essenciais para transformar este sonho em realidade.
+Ao meu orientador, Prof. Marcos Ronaldo Melo Cavalheiro, pela dedicação, confiança,
+valiosas orientações técnicas e acadêmicas, paciência e pelo compartilhamento generoso de
+conhecimento que nortearam o amadurecimento desta pesquisa.
+Aos professores do Curso de Ciência da Computação da Universidade Regional do
+Noroeste do Estado do Rio Grande do Sul (UNIJUÍ), que com zelo e excelência contribuíram
+para minha sólida formação profissional, despertando a paixão pela investigação científica e pela
+computação aplicada.
+Aos colegas de curso e amigos de jornada, pelos momentos de companheirismo, noites
+em claro resolvendo desafios de código, discussões enriquecedoras e pela amizade fraterna
+construída ao longo destes anos.
+Por fim, a toda a comunidade de software livre e de código aberto, cujo espírito de
+cooperação global disponibiliza ferramentas indispensáveis para a democratização e o progresso
+da tecnologia.
+
+“Simplicity is prerequisite for reliability.”
+(Edsger W. Dijkstra)
+LISTA DE ILUSTRAÇÕES
+
+Figura 1 – Painel Inicial do DeployDock com Visão Geral do Sistema . . . . . . . . .
+Figura 2 – Módulo de Telemetria e Monitoramento de Recursos em Tempo Real . . . .
+Figura 3 – Catálogo de Aplicações e Projetos Gerenciados . . . . . . . . . . . . . . .
+Figura 4 – Histórico de Deploys, Inspeção de Logs e Rollback . . . . . . . . . . . . .
+Figura 5 – Gerenciamento do Ciclo de Vida de Contêineres e Terminal . . . . . . . . .
+Figura 6 – Central de Segurança Ativa e Eventos do WAF . . . . . . . . . . . . . . . .
+Figura 7 – Central de Bancos de Dados SQL Gerenciados (PostgreSQL 16) . . . . . .
+Figura 8 – Interface da Sonda Autônoma de Auditoria e Benchmark Científico . . . . .
+
+26
+26
+27
+27
+28
+28
+29
+29
+
+LISTA DE QUADROS
+
+Quadro 1 – Matriz Comparativa Multidimensional entre Plataformas PaaS Abertas . .
+
+33
+
+LISTA DE TABELAS
+
+Tabela 1 – Distribuição e Taxa de Sucesso dos 58 Testes E2E Auditados . . . . . . . . 30
+Tabela 2 – Métricas Empíricas de Estresse Computacional nos Dois Ambientes de Teste 32
+
+LISTA DE ABREVIATURAS E SIGLAS
+
+ACID
+
+Atomicidade, Consistência, Isolamento e Durabilidade (Atomicity, Consistency, Isolation, Durability)
+
+AES
+
+Padrão Avançado de Criptografia (Advanced Encryption Standard)
+
+API
+
+Interface de Programação de Aplicações (Application Programming Interface)
+
+ASGI
+
+Interface de Gateway de Servidor Assíncrono (Asynchronous Server Gateway Interface)
+
+CI/CD
+
+Integração Contínua e Entrega Contínua (Continuous Integration / Continuous Delivery)
+
+CPU
+
+Unidade Central de Processamento (Central Processing Unit)
+
+DoS
+
+Negação de Serviço (Denial of Service)
+
+DSR
+
+Pesquisa em Ciência do Design (Design Science Research)
+
+E2E
+
+Ponta a Ponta (End-to-End)
+
+HMAC
+
+Código de Autenticação de Mensagens Baseado em Hash (Hash-based
+Message Authentication Code)
+
+HTTP
+
+Protocolo de Transferência de Hipertexto (Hypertext Transfer Protocol)
+
+HTTPS
+
+Protocolo de Transferência de Hipertexto Seguro (Hypertext Transfer Protocol Secure)
+
+IOPS
+
+Operações de Entrada/Saída por Segundo (Input/Output Operations Per
+Second)
+
+JWT
+
+Token Web JSON (JSON Web Token)
+
+MFLOPS
+
+Milhões de Operações de Ponto Flutuante por Segundo (Million FloatingPoint Operations Per Second)
+
+OSI
+
+Interconexão de Sistemas Abertos (Open Systems Interconnection)
+
+OWASP
+
+Projeto Aberto de Segurança em Aplicações Web (Open Worldwide Application Security Project)
+
+PaaS
+
+Plataforma como Serviço (Platform as a Service)
+
+PAT
+
+Token de Acesso Pessoal (Personal Access Token)
+
+PID
+
+Identificador de Processo (Process Identifier)
+
+RAM
+
+Memória de Acesso Aleatório (Random Access Memory)
+
+RBAC
+
+Controle de Acesso Baseado em Papéis (Role-Based Access Control)
+
+RCE
+
+Execução Remota de Código (Remote Code Execution)
+
+SGBDR
+
+Sistema de Gerenciamento de Banco de Dados Relacional
+
+SHA
+
+Algoritmo de Hash Seguro (Secure Hash Algorithm)
+
+SQL
+
+Linguagem de Consulta Estruturada (Structured Query Language)
+
+SQLi
+
+Injeção de SQL (SQL Injection)
+
+SSRF
+
+Falsificação de Requisição do Lado do Servidor (Server-Side Request Forgery)
+
+TLS
+
+Segurança da Camada de Transporte (Transport Layer Security)
+
+TOTP
+
+Senha Descartável Baseada em Tempo (Time-Based One-Time Password)
+
+TPS
+
+Transações por Segundo (Transactions Per Second)
+
+TTFB
+
+Tempo até o Primeiro Byte (Time To First Byte)
+
+WAF
+
+Firewall de Aplicações Web (Web Application Firewall)
+
+WAL
+
+Log de Pré-Gravação (Write-Ahead Logging)
+
+XSS
+
+Scripting em Múltiplos Sites (Cross-Site Scripting)
+
+SUMÁRIO
+
+APRESENTAÇÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+RESUMO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+ABSTRACT . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+INTRODUÇÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+SOLUÇÃO PROPOSTA: DEPLOYDOCK . . . . . . . . . . . . . . . . . . . . . . . . . 14
+OBJETIVOS DA PESQUISA . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+ESTRUTURA DO DOCUMENTO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+METODOLOGIA . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+ETAPAS DO PROCESSO METODOLÓGICO . . . . . . . . . . . . . . . . . . . . . . 16
+USO DE INTELIGÊNCIA ARTIFICIAL GENERATIVA NA IMPLEMENTAÇÃO DO
+PROJETO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+DELINEAMENTO EXPERIMENTAL E PROCEDIMENTOS DE TESTE . . . . . . . . 18
+AMBIENTES DE TESTE E INFRAESTRUTURA . . . . . . . . . . . . . . . . . . . . 18
+REFERENCIAL TEÓRICO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+VIRTUALIZAÇÃO NO NÍVEL DO SISTEMA OPERACIONAL E CONTÊINERES . . 19
+PLATAFORMA COMO SERVIÇO (PAAS) E FILOSOFIA GITOPS . . . . . . . . . . . 20
+SEGURANÇA DEFENSIVA EM APLICAÇÕES WEB E HARDENING DE CONTÊINERES . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+INTEGRIDADE TRANSACIONAL ACID EM BANCOS DE DADOS RELACIONAIS 22
+DESENVOLVIMENTO E AVALIAÇÃO EMPÍRICA . . . . . . . . . . . . . . . . . 22
+ARQUITETURA GERAL DO DEPLOYDOCK . . . . . . . . . . . . . . . . . . . . . . 22
+CAMADA DE SEGURANÇA ATIVA E WAF (SECURITY SHIELD) . . . . . . . . . . 23
+ORQUESTRADOR GITOPS COM AUTO-DOCKERFILE E ROLLBACK INSTANTÂNEO 24
+TERMINAL WEB PROTEGIDO E AJUSTE DINÂMICO DE QUOTAS . . . . . . . . . 25
+APRESENTAÇÃO DA INTERFACE DO USUÁRIO . . . . . . . . . . . . . . . . . . . 25
+RESULTADOS E DISCUSSÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+Validação Funcional e de Segurança E2E (58 Testes) . . . . . . . . . . . . . . . . . . 30
+Validação Científica das Propriedades ACID no PostgreSQL 16 . . . . . . . . . . . . 31
+Benchmark de Estresse e Desempenho de Máquina (Intensidade Heavy) . . . . . . . 31
+Matriz Comparativa com Plataformas Correlatas (PaaS Benchmark) . . . . . . . . 32
+CONSIDERAÇÕES FINAIS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+CONTRIBUIÇÕES DA PESQUISA . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+LIMITAÇÕES IDENTIFICADAS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+TRABALHOS FUTUROS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+REFERÊNCIAS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+36
+
+ESTRUTURA DO ESQUEMA DE DADOS DO LAUDO DE AUDITORIA (JSON) . 38
+CRITÉRIOS DE PONDERAÇÃO DO CATÁLOGO DE FUNCIONALIDADES PAAS 40
+CATÁLOGO DOS CASOS DE TESTE E2E DA SONDA DE AUDITORIA . . . . . 41
+
+

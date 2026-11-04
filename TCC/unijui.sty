@@ -1,0 +1,552 @@
+%% =============================================================================
+%% Customizações do abnTeX2 para a Universidade Regional do Noroeste do
+%% Estado do Rio Grande do Sul - UNIJUÍ
+%%
+%% Template desenvolvido e mantido por Prof. Eldair F. Dornelles
+%% A versão mais atualizada deste template pode ser obtida no GitHub:
+%% https://github.com/dornelles/tcc-artigo-template-latex
+%% Qualquer sugestão de melhoria será bem vinda, 
+%% Contato pelo e-mail: eldair.dornelles@unijui.edu.br
+%% =============================================================================
+\RequirePackage{etoolbox}
+
+% --- Contadores Globais para Listas ---
+% Necessários porque os contadores normais (figure, table) reiniciam em cada capítulo,
+% o que faz o pacote totcount retornar 0 se o último capítulo não tiver elementos.
+\newcounter{figcount} \regtotcounter{figcount}
+\newcounter{tabcount} \regtotcounter{tabcount}
+\newcounter{quacount} \regtotcounter{quacount}
+
+% Incrementar os contadores globais sempre que os respectivos ambientes forem usados
+\AtBeginEnvironment{figure}{\stepcounter{figcount}}
+\AtBeginEnvironment{table}{\stepcounter{tabcount}}
+\AtBeginEnvironment{quadro}{\stepcounter{quacount}}
+
+
+% ==============================================================================
+% CONFIGURAÇÃO DE FONTE
+% ==============================================================================
+\usepackage{mathptmx} % Times New Roman
+% \usepackage{helvet} % Arial
+% \renewcommand{\familydefault}{\sfdefault} % sans serif
+
+% --- Forçar Times New Roman e Tamanho 12 em todos os títulos ---
+\renewcommand{\ABNTEXsectionfont}{\rmfamily\bfseries}
+\renewcommand{\ABNTEXsectionfontsize}{\normalsize}
+\renewcommand{\ABNTEXsubsectionfont}{\rmfamily}
+\renewcommand{\ABNTEXsubsectionfontsize}{\normalsize}
+\renewcommand{\ABNTEXsubsubsectionfont}{\rmfamily\bfseries}
+\renewcommand{\ABNTEXsubsubsectionfontsize}{\normalsize}
+\renewcommand{\ABNTEXsubsubsubsectionfont}{\rmfamily}
+\renewcommand{\ABNTEXsubsubsubsectionfontsize}{\normalsize}
+
+% --- Correções para manter a formatação caso seja usado como artigo (article) ---
+% Espaçamento antes/após títulos: equivale a "uma linha em branco de 1,5" (norma ABNT para artigos)
+\setbeforesecskip{2\baselineskip}
+\setaftersecskip{0.7\baselineskip}
+\setbeforesubsecskip{1.5\baselineskip}
+\setaftersubsecskip{0.7\baselineskip}
+\setbeforesubsubsecskip{1.5\baselineskip}
+\setaftersubsubsecskip{0.7\baselineskip}
+
+% --- Centralização de títulos de seção ---
+% Centraliza os títulos de seção principal para manter o estilo que os capítulos tinham
+\setsecheadstyle{\centering\ABNTEXsectionfont\ABNTEXsectionfontsize\ABNTEXsectionupperifneeded}
+\setsubsecheadstyle{\ABNTEXsubsectionfont\ABNTEXsubsectionfontsize\MakeTextUppercase}
+\setsubsubsecheadstyle{\ABNTEXsubsubsectionfont\ABNTEXsubsubsectionfontsize\ABNTEXsubsubsectionupperifneeded}
+
+% Para ocultar o número de todas as seções, subseções e subsubseções no texto:
+\setsecnumformat{}
+
+% Ocultar o número das seções no sumário
+\renewcommand{\cftsectionpresnum}{}
+\renewcommand{\cftsectionaftersnum}{}
+\setlength{\cftsectionnumwidth}{0pt}
+\renewcommand{\cftsubsectionpresnum}{}
+\renewcommand{\cftsubsectionaftersnum}{}
+\setlength{\cftsubsectionnumwidth}{0pt}
+\renewcommand{\cftsubsubsectionpresnum}{}
+\renewcommand{\cftsubsubsectionaftersnum}{}
+\setlength{\cftsubsubsectionnumwidth}{0pt}
+
+% --- Customização do cabeçalho (apenas número da página) ---
+\makepagestyle{abntheadings}
+\makeevenhead{abntheadings}{\thepage}{}{}
+\makeoddhead{abntheadings}{}{}{\thepage}
+\makeheadrule{abntheadings}{\textwidth}{0pt}
+
+\renewcommand{\textual}{%
+  \pagestyle{abntheadings}%
+  \nouppercaseheads%
+  \bookmarksetup{startatroot}% 
+}
+
+\AtBeginDocument{
+  \setlength\absleftindent{0cm}
+  \setlength\absrightindent{0cm}
+  \renewcommand{\abstracttextfont}{\normalfont\normalsize}
+  
+  % Ocultar numeração no Sumário globalmente (não afeta figuras/tabelas pois elas usam lof/lot)
+  \addtocontents{toc}{\protect\renewcommand{\protect\numberline}[1]{}}
+}
+
+% --- Correção: formatação para apêndices e anexos num formato artigo ---
+\AtBeginEnvironment{apendicesenv}{
+  % Em artigos abntex2 converte section para letras automaticamente,
+  % mas garantimos a alteração aqui.
+  \renewcommand{\thesection}{\Alph{section}}
+  % Adicionar "Apêndice A" no título
+  \setsecnumformat{\appendixname~\thesection~--\space}
+}
+\AtBeginEnvironment{anexosenv}{
+  \renewcommand{\thesection}{\Alph{section}}
+  % Adicionar "Anexo A" no título
+  \setsecnumformat{\anexoname~\thesection~--\space}
+}
+
+% --- Formatação do Sumário (espelhar títulos do documento) ---
+
+% Seções: negrito, maiúsculas (recebem o estilo dos capítulos)
+\renewcommand{\cftsectionfont}{\rmfamily\bfseries\MakeUppercase}
+\renewcommand{\cftsectionpagefont}{\rmfamily\bfseries}
+% Subseções: sem negrito (recebem o estilo das seções antigas)
+\renewcommand{\cftsubsectionfont}{\rmfamily\mdseries\MakeUppercase}
+\renewcommand{\cftsubsectionpagefont}{\rmfamily}
+% SubSubseções: negrito (recebem o estilo das subseções antigas)
+\renewcommand{\cftsubsubsectionfont}{\rmfamily\bfseries}
+\renewcommand{\cftsubsubsectionpagefont}{\rmfamily\bfseries}
+
+
+
+
+% ==============================================================================
+% DEFINIÇÃO DO AMBIENTE QUADRO
+% ==============================================================================
+\newcommand{\quadroname}{Quadro}
+\newcommand{\listofquadrosname}{Lista de quadros}
+
+\newfloat{quadro}{loq}{\quadroname}
+\newlistof{listofquadros}{loq}{\listofquadrosname}
+\newlistentry{quadro}{loq}{0}
+
+
+%\counterwithout{quadro}{section}
+\renewcommand{\cftquadroname}{\quadroname\space}
+\renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+\setfloatlocations{quadro}{hbtp}
+
+% --- Centralizar tabelas quadros e figuras ---
+\setfloatadjustment{quadro}{\centering}
+\setfloatadjustment{table}{\centering}
+\setfloatadjustment{figure}{\centering}
+
+% --- Fontes das legendas (Captions e Legends) em tamanho 10pt ---
+% Caption = título acima do float (memoir)
+\captionnamefont{\footnotesize}     % "Figura X –" em tamanho 10
+\captiontitlefont{\footnotesize}    % texto do título em tamanho 10
+\captionstyle{\raggedright}         % Alinhar a caption à esquerda (memoir)
+\captionsetup{singlelinecheck=false, justification=raggedright} % Alinhar a caption à esquerda (pacote caption)
+\setlength{\abovecaptionskip}{2pt}  % espaço acima do caption (entre texto e caption)
+\setlength{\belowcaptionskip}{2pt}  % espaço abaixo do caption (entre caption e conteúdo)
+\setlength{\textfloatsep}{15pt} % espaço entre a figura e o texto do documento
+
+% Legend = fonte abaixo do float (abnTeX2 usa \legend{})
+% Alinhar a legend à esquerda
+\renewcommand{\legend}[1]{\par\vspace{1pt}{\raggedright\footnotesize #1\par}}
+
+% ==============================================================================
+% COMANDOS PARA INFORMAÇÕES DO TRABALHO
+% ==============================================================================
+\providecommand{\imprimirtituloemingles}{}
+\newcommand{\tituloemingles}[1]{#1}
+\renewcommand{\tituloemingles}[1]{\def\imprimirtituloemingles{#1}}
+
+\providecommand{\imprimirsubtitulo}{}
+\newcommand{\subtitulo}[1]{#1}
+\renewcommand{\subtitulo}[1]{\def\imprimirsubtitulo{#1}}
+
+\providecommand{\imprimirsubtituloemingles}{}
+\newcommand{\subtituloemingles}[1]{#1}
+\renewcommand{\subtituloemingles}[1]{\def\imprimirsubtituloemingles{#1}}
+% --- Orientador ---
+\renewcommand{\orientadorname}{Orientador(a):}
+
+% --- Data da banca (dia, mês, ano) ---
+\newcommand{\datadabanca}[3]{%
+  \def\imprimirdatadabanca{#1 de #2 de #3}%
+}
+
+% --- Professor da banca ---
+\newcommand{\professordabanca}[1]{#1}
+\renewcommand{\professordabanca}[1]{\def\imprimirprofessordabanca{#1}}
+
+% --- Autores para o artigo ---
+\providecommand{\imprimirautoresartigo}{}
+\newcommand{\autoresartigo}[1]{#1}
+\renewcommand{\autoresartigo}[1]{\def\imprimirautoresartigo{#1}}
+
+% --- Campus ---
+\newcommand{\campus}[1]{#1}
+\renewcommand{\campus}[1]{\def\imprimircampus{\MakeUppercase{CAMPUS #1}}}
+
+% --- Curso ---
+\newcommand{\curso}[1]{%
+  \def\imprimirNomeDoCurso{#1}%
+  \def\imprimirCursoMaiusculo{CURSO DE \MakeUppercase{#1}}%
+}
+
+% % --- Data de aprovação ---
+% \newcommand{\dataaprovacao}[1]{#1}
+% \renewcommand{\dataaprovacao}[1]{\def\imprimirdataaprovacao{#1}}
+
+% --- Texto para ser adicionado após o preâmbulo na folha de aprovação ---
+\newcommand{\submetidoabanca}{, submetido à aprovação da banca examinadora composta pelos seguintes membros:}
+
+% --- Resumo em português ---
+\providecommand{\imprimirresumo}{}
+\newcommand{\resumoemportugues}[1]{#1}
+\renewcommand{\resumoemportugues}[1]{\def\imprimirresumo{#1}}
+
+\renewenvironment{resumo}[1][\resumoname]{%
+   \phantomsection
+   \addcontentsline{toc}{section}{\texorpdfstring{\MakeTextUppercase{#1}}{#1}}
+   \renewcommand{\abstractnamefont}{\ABNTEXsectionfont\ABNTEXsectionfontsize}
+   \renewcommand{\abstractname}{\ABNTEXsectionupperifneeded{#1}}
+   \begin{abstract}
+}{\end{abstract}\PRIVATEclearpageifneeded}
+
+% --- Palavras-chave em português ---
+\providecommand{\imprimirpalavraschave}{}
+\newcommand{\palavraschaveemportugues}[1]{#1}
+\renewcommand{\palavraschaveemportugues}[1]{\def\imprimirpalavraschave{#1}}
+
+% --- Resumo em inglês ---
+\providecommand{\imprimirabstract}{}
+\newcommand{\resumoemingles}[1]{#1}
+\renewcommand{\resumoemingles}[1]{\def\imprimirabstract{#1}}
+
+% --- Palavras-chave em inglês ---
+\providecommand{\imprimirkeywords}{}
+\newcommand{\palavraschaveemingles}[1]{#1}
+\renewcommand{\palavraschaveemingles}[1]{\def\imprimirkeywords{#1}}
+
+% --- Apresentação ---
+\newcommand{\imprimirapresentacao}{}
+\newcommand{\textoapresentacao}[1]{#1}
+\renewcommand{\textoapresentacao}[1]{\def\imprimirapresentacao{#1}}
+
+\newenvironment{apresentacao}[1][Apresentação]{%
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{section}{\texorpdfstring{\MakeTextUppercase{#1}}{#1}}
+  \section*{#1}
+}{}
+
+
+% --- Referências (ajustes para nível de seção) ---
+\renewcommand{\bibsection}{%
+  \section*{\bibname}
+  \bibmark
+  \ifnobibintoc\else
+  \phantomsection
+  \addcontentsline{toc}{section}{\texorpdfstring{\MakeTextUppercase{\bibname}}{\bibname}}
+  \fi
+  \prebibhook
+}
+
+
+% ==============================================================================
+% EPÍGRAFE
+% ==============================================================================
+\newcommand{\inserirepigrafe}[2]{
+  \vspace*{\fill}
+  \hspace{.35\textwidth}
+  \begin{minipage}{.5\textwidth}
+  \SingleSpacing
+    \begin{flushright}
+      \textit{``#1''\\
+      (#2)}
+    \end{flushright}
+  \end{minipage}%
+}
+% ==============================================================================
+% CAPA
+% ==============================================================================
+\renewcommand{\imprimircapa}{%
+  \begin{capa}%
+    \center
+    \vspace*{-1cm}
+     % --- Cabeçalho: logo + instituição/curso ---
+    \begin{tabular}{p{4.5cm}p{\dimexpr\textwidth-4.5cm-2\tabcolsep\relax}}
+      \vspace{0pt}\includegraphics[width=4.5cm]{figuras/00-capa/logo_unijui.png} &
+      \begin{minipage}[t]{\dimexpr\textwidth-4.5cm-2\tabcolsep\relax}
+        \centering
+        \vspace*{8mm}
+        \normalsize\MakeUppercase{\imprimirinstituicao}\\
+        \vspace{1.5mm}
+        \imprimirCursoMaiusculo
+      \end{minipage}
+    \end{tabular}
+    \par
+    \vspace{2.5cm}
+    \normalsize\MakeUppercase{\imprimirautor}
+    \par
+    \vspace{1.2cm}
+    \vfill
+    \normalsize\MakeUppercase{\imprimirtitulo}\ifthenelse{\equal{\imprimirsubtitulo}{}}{}{: \imprimirsubtitulo}
+    \vfill \vfill \vfill
+    \normalsize\imprimirlocal\\[1mm]
+    \normalsize\imprimirdata
+    \par
+    \vspace*{1.25cm}
+    \end{capa}
+}
+
+% ==============================================================================
+% FOLHA DE ROSTO
+% ==============================================================================
+\makeatletter
+\renewcommand{\folhaderostocontent}{
+  \begin{center}
+    \vspace*{-1mm}
+    \normalsize\MakeUppercase{\imprimirautor}
+    \vspace*{5mm}
+    \vfill \vfill
+
+    \normalsize\MakeUppercase{\imprimirtitulo}\ifthenelse{\equal{\imprimirsubtitulo}{}}{}{: \imprimirsubtitulo}
+ 
+    \vfill
+    \abntex@ifnotempty{\imprimirpreambulo}{%
+      \hspace{.35\textwidth}
+      \begin{minipage}{.5\textwidth}
+      \SingleSpacing
+      \imprimirpreambulo\unskip.
+      \end{minipage}%
+    }%
+    
+   \vspace*{2.2cm}
+   \hspace{.35\textwidth}
+   \begin{minipage}{.5\textwidth}
+   \SingleSpacing
+   \large\imprimirorientadorRotulo~\imprimirorientador
+   \end{minipage}%
+  
+   \vspace*{2cm}
+   \par
+   \vfill \vfill \vfill \vfill
+    
+    \normalsize\imprimirlocal\\[1mm]
+    \normalsize\imprimirdata
+    \par
+    \vspace*{8mm}
+  \end{center}
+}
+\makeatother
+
+% ==============================================================================
+% FOLHA DE APROVAÇÃO
+% ==============================================================================
+\makeatletter
+\newcommand{\imprimirfolhadabanca}{
+    \begin{center}
+        \normalsize\MakeUppercase{\imprimirautor}
+        \vspace*{\fill} \vspace*{\fill}
+        \begin{center}
+        \normalsize\MakeUppercase{\imprimirtitulo}
+        \end{center}
+        \vspace*{\fill}
+
+        \abntex@ifnotempty{\imprimirpreambulo}{%
+          \hspace{.35\textwidth}
+          \begin{minipage}{.5\textwidth}
+          \SingleSpacing
+          \imprimirpreambulo\unskip
+          \submetidoabanca
+          \end{minipage}%
+        }%
+        
+        \vspace*{1cm}
+         \large\assinatura{\imprimirorientador \\ Orientador(a)}
+        \vspace*{1.3cm}
+         \large\assinatura{\imprimirprofessordabanca \\ Membro da Banca}
+        \vspace*{3.5cm}
+        \normalsize\imprimirlocal, \imprimirdatadabanca
+        \par
+        \vspace*{1cm}
+    \end{center}
+    \newpage
+}
+\makeatother
+
+
+% ==============================================================================
+% PÁGINA DE RESUMOS
+% ==============================================================================
+\newcommand{\imprimirpaginaresumos}{
+
+  \begin{center}
+    \ifthenelse{\equal{\imprimirtitulo}{}}{}{
+        \normalsize\MakeUppercase{\imprimirtitulo}\ifthenelse{\equal{\imprimirsubtitulo}{}}{}{: \imprimirsubtitulo}
+        \par
+    }
+
+    \ifthenelse{\equal{\imprimirtituloemingles}{}}{}{
+        \normalsize\MakeUppercase{\imprimirtituloemingles}\ifthenelse{\equal{\imprimirsubtituloemingles}{}}{}{: \imprimirsubtituloemingles}
+        \par
+    }
+  \end{center}
+
+  % --- Autores ---
+  \ifthenelse{\equal{\imprimirautoresartigo}{}}{}{
+      \vspace{3mm}
+      % \begin{adjustwidth}{0.5\textwidth}{0cm}
+       
+      %   \begingroup
+         \begin{flushright} 
+          \setcounter{footnote}{0}
+          \renewcommand{\thefootnote}{\arabic{footnote}}
+          \let\thanks\footnote
+          \renewcommand{\and}{\\[1mm]}
+          \normalsize \imprimirautoresartigo
+        \end{flushright}
+      %   \endgroup
+      % \end{adjustwidth}
+    \vspace{3mm}
+  }
+
+  \ifthenelse{\equal{\imprimirresumo}{}}{}{
+      \begin{resumo}
+      \vspace{-\onelineskip}
+      \imprimirresumo \\
+      \noindent \textbf{Palavras-chave}: \imprimirpalavraschave
+      \end{resumo}
+  }
+
+  \ifthenelse{\equal{\imprimirabstract}{}}{}{
+      \ifthenelse{\equal{\imprimirresumo}{}}{}{
+          \noindent\rule{\textwidth}{0.4pt}% imprimir linha separando os dois resumos
+      }
+      % --- Resumo em inglês ---
+      \begin{otherlanguage*}{english}
+      \begin{resumo}[Abstract]
+          \vspace{-\onelineskip}
+          \vspace{1mm}
+          \imprimirabstract\\
+          \noindent \textbf{Keywords}: \imprimirkeywords
+      \end{resumo}
+      \end{otherlanguage*}
+  }
+
+  \ifthenelse{\equal{\imprimirresumo}{}\AND\equal{\imprimirabstract}{}}{}{\newpage}
+}
+
+% ==============================================================================
+% FIM DAS CUSTOMIZAÇÕES PARA A UNIVERSIDADE UNIJUÍ
+% ==============================================================================
+
+
+
+
+
+% ==============================================================================
+% CONFIGURAÇÃO DA MARCA D'ÁGUA
+% ==============================================================================
+
+% Marca d'água diagonal em todas as páginas indicando que é um template tutorial
+% --- Pacotes para Marca d'água (template tutorial) ---
+\usepackage{fontawesome5}       % ícones (ex.: \faWarning)
+\usepackage[firstpage=false]{draftwatermark}  % marca d'água em todas as páginas
+\usepackage{tikz}               % para a página de créditos
+\usepackage{mdframed}           % caixas decorativas na página de créditos
+\usepackage{qrcode}             % QR code (opcional)
+
+% Oculta a marca d'água por padrão (caso \imprimirmarcadagua não seja chamado)
+\DraftwatermarkOptions{stamp=false, text={}}
+
+\newcommand{\imprimirmarcadagua}{
+  \DraftwatermarkOptions{
+      stamp=true,
+      text={TEMPLATE TUTORIAL},
+      scale=0.55,
+      angle=45,
+      color=gray!18,       % cinza bem claro para não atrapalhar a leitura
+      fontsize=72pt,
+    }
+}
+
+\newcommand{\imprimirpaginadecreditos}{
+
+\clearpage
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture, overlay]
+        % Fundo superior colorido
+        \fill[blue!80!black] (current page.north west) rectangle
+            ([yshift=-5cm] current page.north east);
+        % Faixa diagonal decorativa
+        \fill[blue!60!cyan, opacity=0.5]
+            ([yshift=-4.5cm] current page.north west) --
+            ([yshift=-6cm]   current page.north west) --
+            ([yshift=-4.5cm] current page.north east) --
+            ([yshift=-3cm]   current page.north east) -- cycle;
+        % Fundo inferior (restante da página)
+        \fill[gray!8] (current page.south west) rectangle
+            ([yshift=-5cm] current page.north east);
+    \end{tikzpicture}
+    %
+    % --- Conteúdo da página ---
+    \vspace*{-2.5cm}
+    \begin{center}
+        % Título no fundo azul
+        {\color{white}\fontsize{28}{34}\selectfont\bfseries TEMPLATE TUTORIAL}\\[4pt]
+        {\color{blue!20}\fontsize{14}{18}\selectfont Artigo / TCC}\\[2pt]
+        {\color{white!80!gray}\fontsize{11}{14}\selectfont conforme normas ABNT -- UNIJUÍ}
+    \end{center}
+    %
+    \vspace{3.5cm}
+    %
+    % Caixa de aviso ao aluno
+    \begin{mdframed}[
+        backgroundcolor=yellow!15,
+        linecolor=orange!70!black,
+        linewidth=1.5pt,
+        innerleftmargin=12pt,
+        innerrightmargin=12pt,
+        innertopmargin=10pt,
+        innerbottommargin=10pt
+    ]
+        {\large\bfseries\color{orange!80!black} \faExclamationTriangle{} ATENÇÃO -- LEIA ANTES DE USAR}\\[6pt]
+        Este arquivo é um {\bfseries template tutorial} para a elaboração do Trabalho de Conclusão de curso (Artigo / TCC)
+        da UNIJUÍ, elaborado para os cursos de Ciência da Computação, Engenharia de Software e Inteligência Artificial. Ao longo do documento, você encontrará \textbf{instruções} que explicam \textbf{o que escrever} em cada seção.\\[4pt]
+        {\bfseries Ao redigir seu próprio texto:}
+        \vspace{-2mm}
+        \begin{itemize}[leftmargin=1.5em, itemsep=1pt]
+            \item Substitua todos os textos de exemplo pelo seu conteúdo;
+            \item Remova as instruções que não fazem parte do trabalho final;
+            \item Preencha corretamente os dados cadastrais na seção de dados do trabalho
+                  no arquivo \texttt{main.tex};
+            \item Compile o documento ao menos duas vezes para gerar corretamente
+                  sumário, listas e referências cruzadas.
+        \end{itemize}
+        \vspace{-3mm}
+        \textbf{A marca d'água} ``\textit{TEMPLATE TUTORIAL}'' é exclusiva deste PDF e não consta no projeto LaTeX original. Obtenha a versão atualizada em:
+        https://github.com/dornelles/tcc-artigo-template-latex.\\[1pt]
+        \end{mdframed}
+    %
+    \vfill
+    %
+    % Rodapé com créditos
+    \begin{center}
+        \rule{0.8\textwidth}{0.4pt}\\[6pt]
+        {\small\bfseries Template desenvolvido e mantido por:}\\[3pt]
+        {\normalsize\bfseries Prof. Eldair F. Dornelles}\\[2pt]
+        {\small Universidade Regional do Noroeste do Estado do Rio Grande do Sul -- UNIJUÍ}\\[1pt]
+        {\small Campus Ijuí}\\[4pt]
+        {\small \texttt{eldair.dornelles@unijui.edu.br}}\\[6pt]
+        {\footnotesize Sugestões de melhoria são bem-vindas. Compartilhe com colegas!}\\[4pt]
+        \rule{0.8\textwidth}{0.4pt}\\[3pt]
+        {\scriptsize Baseado no \textbf{abnTeX2} -- Suporte a normas ABNT para \LaTeX}
+    \end{center}
+    \vspace{0.5cm}
+\clearpage
+
+}

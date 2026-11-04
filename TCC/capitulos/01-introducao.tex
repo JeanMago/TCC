@@ -1,0 +1,52 @@
+% ==============================================================================
+% CAPÍTULO 1 - INTRODUÇÃO
+% ==============================================================================
+
+\section{Introdução}
+\label{sec:introducao}
+
+A consolidação da computação em nuvem e a transição de monólitos de software para arquiteturas baseadas em microsserviços transformaram radicalmente as etapas de desenvolvimento, teste e implantação de sistemas computacionais. No centro dessa transformação, a virtualização baseada em contêineres --- especialmente capitaneada pelo ecossistema Docker --- estabeleceu-se como padrão \textit{de facto} na indústria de software \cite{merkel2014}. Ao empacotar a aplicação com todas as suas dependências e bibliotecas em unidades atômicas e portáveis, os contêineres garantem previsibilidade e eliminam discrepâncias entre ambientes de homologação e produção \cite{combes2016}.
+
+No entanto, o gerenciamento do ciclo de vida dessas aplicações conteinerizadas introduz uma camada substancial de complexidade operacional. Práticas modernas como a Entrega Contínua (\textit{Continuous Delivery}) \cite{humble2010} e o paradigma GitOps --- no qual repositórios de controle de versão atuam como a fonte única da verdade para o estado desejado da infraestrutura --- exigem esteiras automatizadas de construção (\textit{build}), provisionamento de certificados digitais, roteamento reverso de tráfego de rede e monitoramento de integridade (\textit{health check}).
+
+Para atender a essas demandas, o mercado corporativo tradicionalmente recorre a orquestradores de contêineres em larga escala, dos quais o Kubernetes é o expoente mais difundido \cite{burns2016}. Embora o Kubernetes apresente capacidades sólidas de escalabilidade horizontal e resiliência em centros de dados distribuídos, sua adoção impõe uma sobrecarga computacional acentuada e uma curva de aprendizado íngreme. A complexidade de configuração baseada em centenas de manifestos YAML, o consumo excessivo de memória em repouso dos planos de controle (\textit{control plane}) e a necessidade de equipe especializada inviabilizam sua sustentabilidade econômica e técnica em infraestruturas modestas, pequenos servidores autohospedados (\textit{bare-metal} ou VPS), laboratórios acadêmicos e pequenas empresas de base tecnológica.
+
+Como alternativa, consolidaram-se as Plataformas como Serviço (\textit{Platform as a Service} -- PaaS), tanto em ofertas proprietárias sob demanda na nuvem pública (tais como Heroku, Render e Railway), quanto em soluções de código aberto autohospedadas (\textit{self-hosted}), exemplificadas por CapRover, Dokploy e Coolify. Não obstante a evolução das ferramentas de código aberto, uma investigação aprofundada de suas arquiteturas revela lacunas críticas:
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Vulnerabilidade na Camada de Aplicação:} a grande maioria dos orquestradores PaaS foca exclusivamente no roteamento HTTP (frequentemente via Traefik ou Nginx), transferindo integralmente a responsabilidade de mitigação de ataques à aplicação, carecendo de um Web Application Firewall (WAF) ativo e integrado capaz de neutralizar vetores como Injeção de SQL (\textit{SQL Injection}), \textit{Cross-Site Scripting} (XSS), \textit{Path Traversal} e Execução Remota de Código (RCE) antes que atinjam o núcleo do sistema;
+    \item \textbf{Falta de Hardening Padrão no Contêiner:} por conveniência operacional, muitos contêineres gerenciados são criados sem imposição de restrições de privilégios (`no-new-privileges`), sem cotas estritas de criação de processos (`pids.max`), permitindo que falhas de código ou bibliotecas comprometidas provoquem esgotamento de recursos no hospedeiro (\textit{fork bomb}) ou escalação de privilégios via binários com bits SUID;
+    \item \textbf{Gestão Rígida de Recursos:} o ajuste de quotas de memória RAM e núcleos de CPU geralmente demanda a interrupção completa e recriação do contêiner, interrompendo a prestação de serviços;
+    \item \textbf{Ausência de Baterias de Auditoria Científica:} inexistem mecanismos integrados nas plataformas que permitam auditar e mensurar, de forma empírica e reprodutível, a conformidade de transações de bancos de dados relacionais com as propriedades ACID (Atomicidade, Consistência, Isolamento e Durabilidade) \cite{stonebraker1986}, bem como limites de estresse de CPU, memória, I/O e rede.
+\end{enumerate}
+
+Diante dessa problemática, emerge a seguinte questão de pesquisa: \textit{Como conceber, implementar e avaliar empiricamente uma Plataforma como Serviço (PaaS) autohospedada, leve e orientada a GitOps, que integre nativamente mecanismos ativos de defesa (WAF), hardening estrito de contêineres e orquestração de bancos de dados relacionais sob garantias ACID?}
+
+\subsection{Solução Proposta: DeployDock}
+\label{sec:solucao-proposta}
+
+Para responder a essa questão, este trabalho apresenta o projeto e a concretização do \textbf{DeployDock}, um ecossistema PaaS de código aberto desenvolvido sobre a linguagem Python utilizando o framework assíncrono FastAPI, SQLAlchemy Assíncrono, orquestração via Docker SDK e roteamento dinâmico baseado em Traefik v3. O DeployDock incorpora uma camada ativa de segurança (\textit{Security Shield}) que intercepta tráfego HTTP malicioso em nível de middleware, criptografa segredos em repouso por meio do algoritmo Fernet (AES-128 em modo CBC com autenticação HMAC-SHA256), aplica regras de controle de processos via \textit{cgroups} do Linux (com limites automáticos de PIDs e bloqueio de novos privilégios) e suporta atualização dinâmica de quotas de recursos em tempo de execução sem interrupção de contêineres.
+
+Além da infraestrutura de deploy, o projeto engloba o desenvolvimento de uma sonda autônoma de instrumentação e testes denominada \textit{DeployDock Multi-Model Benchmark \& PaaS Tester Probe v2.2}. Esta ferramenta foi especificamente modelada para submeter a plataforma a uma bateria exaustiva de 58 testes funcionais de ponta a ponta (E2E), testes transacionais direcionados ao PostgreSQL 16 e rotinas de estresse computacional sob condições extremas de hardware.
+
+\subsection{Objetivos da Pesquisa}
+\label{sec:objetivos}
+
+O \textbf{objetivo geral} deste trabalho de conclusão de curso consiste em projetar, implementar e validar empiricamente uma Plataforma como Serviço (PaaS) autohospedada e segura, denominada DeployDock, avaliando seu desempenho, eficácia defensiva e conformidade arquitetural frente aos desafios operacionais de microsserviços.
+
+Como \textbf{objetivos específicos}, definem-se:
+\begin{itemize}
+    \item Modelar e construir a arquitetura do DeployDock em microframework assíncrono, integrando roteamento dinâmico via Traefik v3, emissão automatizada de certificados TLS Let's Encrypt com wildcard e cofre criptográfico para variáveis de ambiente;
+    \item Desenvolver um orquestrador GitOps com suporte a acionamento via \textit{webhooks}, detecção inteligente e automatizada de stacks tecnológicas (\textit{Zero-Config / Auto-Dockerfile}) e estratégia de \textit{health check} com reversão instantânea (\textit{rollback}) em falhas;
+    \item Implementar o módulo de segurança defensiva ativa com WAF embutido, limitador de taxa (\textit{rate limiting}), bloqueio de força bruta, controle de acesso baseado em papéis (RBAC) e \textit{hardening} padrão de contêineres;
+    \item Projetar a suíte de auditoria e a sonda empírica independente para execução de 58 testes E2E, estresse multivariado de hardware e validação rigorosa das propriedades ACID no banco de dados gerenciado PostgreSQL 16;
+    \item Analisar quantitativamente os resultados de latência, throughput, isolamento de processos e consumo de memória em repouso, contrastando os achados com soluções correlatas do estado da arte.
+\end{itemize}
+
+\subsection{Estrutura do Documento}
+\label{sec:estrutura-documento}
+
+O restante deste trabalho está estruturado da seguinte forma:
+A \autoref{sec:metodologia} descreve o delineamento metodológico da pesquisa, caracterizando a abordagem experimental adotada, as variáveis mensuradas e os ambientes operacionais de teste.
+A \autoref{sec:referencial-teorico} estabelece os fundamentos teóricos em virtualização por contêineres, orquestração PaaS, princípios GitOps, segurança em aplicações Web e integridade transacional ACID.
+A \autoref{sec:desenvolvimento} detalha a arquitetura do DeployDock, suas decisões de implementação de software, a instrumentação da sonda de testes e discute aprofundadamente os dados empíricos obtidos na validação funcional, no teste de estresse de máquina e na comparação de mercado.
+Por fim, a \autoref{sec:consideracoes} sintetiza as principais conclusões, destacando contribuições, limitações e perspectivas de trabalhos futuros.

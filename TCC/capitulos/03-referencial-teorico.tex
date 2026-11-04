@@ -1,0 +1,67 @@
+% ==============================================================================
+% CAPÍTULO 3 - REFERENCIAL TEÓRICO
+% ==============================================================================
+
+\section{Referencial Teórico}
+\label{sec:referencial-teorico}
+
+Esta seção apresenta os fundamentos conceituais e tecnológicos que sustentam o projeto e a validação do DeployDock, abordando a virtualização baseada em contêineres, os paradigmas de Plataforma como Serviço e GitOps, a segurança defensiva na camada Web e de contêineres, e as propriedades transacionais de bancos de dados relacionais.
+
+\subsection{Virtualização no Nível do Sistema Operacional e Contêineres}
+\label{sec:virtualizacao-conteineres}
+
+Diferentemente da virtualização tradicional baseada em hipervisores de Tipo 1 ou Tipo 2 (que emulam hardware completo e executam instâncias integrais de sistemas operacionais convidados), a virtualização baseada em contêineres opera no nível do sistema operacional hospedeiro \cite{silberschatz2018}. Conforme demonstrado por \citeonline{felter2015} e \citeonline{xavier2013}, os contêineres oferecem desempenho quase nativo em processamento de CPU e I/O, além de uma pegada de memória e tempo de inicialização ordens de grandeza inferiores aos das máquinas virtuais.
+
+Essa tecnologia repousa fundamentalmente sobre duas primitivas do núcleo (\textit{kernel}) Linux:
+\begin{enumerate}
+    \item \textbf{Namespaces:} Proporcionam isolamento de visão dos recursos globais do sistema. Destacam-se os \textit{namespaces} de Processos (\texttt{pid}), Rede (\texttt{net}), Montagem de sistemas de arquivos (\texttt{mnt}), Comunicação entre processos (\texttt{ipc}), Nome do host (\texttt{uts}) e Identificadores de usuário (\texttt{user}) \cite{silberschatz2018};
+    \item \textbf{Control Groups (cgroups):} Mecanismo do kernel responsável pela medição, priorização e imposição de limites de recursos físicos de hardware. A evolução do padrão Cgroup v1 para o Cgroup v2 unificou a hierarquia de controle, possibilitando restrições estritas de quotas de tempo de CPU (\texttt{cpu.cfs\_quota\_us}), teto de memória RAM (\texttt{memory.limit\_in\_bytes} ou \texttt{memory.max}) e controle de multiplicação de processos (\texttt{pids.max}).
+\end{enumerate}
+
+A ferramenta Docker popularizou essas primitivas ao introduzir um formato padronizado de imagens empacotadas em camadas sobrepostas (\textit{Union File System}), facilitando o compartilhamento e a execução determinística de microsserviços \cite{merkel2014,combes2016}.
+
+\subsection{Plataforma como Serviço (PaaS) e Filosofia GitOps}
+\label{sec:paas-gitops}
+
+O modelo de Plataforma como Serviço (\textit{Platform as a Service} -- PaaS) situa-se na camada intermediária da computação em nuvem, abstraindo a gestão de servidores físicos, redes, sistemas operacionais e bibliotecas de runtime, permitindo que a equipe de engenharia concentre seus esforços exclusivamente no código da aplicação e nas regras de negócio \cite{bass2015,newman2021}. 
+
+A especificação \textit{The Twelve-Factor App} \cite{wiggins2017} formalizou as boas práticas para arquiteturas modernas em nuvem, preconizando a separação rígida entre código e configurações (armazenadas em variáveis de ambiente), a statelessness dos processos de execução e a gestão de serviços de apoio (\textit{backing services}) como recursos anexados.
+
+Com a evolução da Integração Contínua e Entrega Contínua (CI/CD) \cite{fowler2006,humble2010}, emergiu o movimento \textbf{GitOps}. No paradigma GitOps, os repositórios Git representam a fonte única de verdade (\textit{single source of truth}) tanto para a aplicação quanto para o estado da infraestrutura. Quando um desenvolvedor realiza um \textit{push} de código ou abre uma requisição de mesclagem (\textit{Pull Request}), gatilhos via \textit{webhooks} HTTP acionam pipelines autônomos que realizam a clonagem, executam o processo de compilação (\textit{build}), provisionam o roteamento reverso de portas e disponibilizam a nova versão sem indisponibilidade de serviço (\textit{zero-downtime deployment}).
+
+No ecossistema de código aberto, ferramentas como CapRover, Coolify v4 e Dokploy surgiram com a proposta de oferecer alternativas autohospedadas a plataformas comerciais. Contudo, conforme evidenciado nesta pesquisa, a maior parte dessas implementações concentra-se na experiência de usuário, negligenciando controles internos de mitigação de ataques cibernéticos e isolamento estrito de permissões.
+
+\subsection{Segurança Defensiva em Aplicações Web e Hardening de Contêineres}
+\label{sec:seguranca-hardening}
+
+A exposição de serviços à rede pública submete as aplicações a ameaças contínuas, amplamente catalogadas pelo consórcio OWASP (\textit{Open Worldwide Application Security Project}) \cite{owasp2021}. Dentre os vetores mais severos de comprometimento, destacam-se:
+\begin{itemize}
+    \item \textbf{Injeção de SQL (SQLi):} Inserção maliciosa de comandos SQL em campos de entrada não sanitizados, permitindo a leitura e a destruição de dados relacionais;
+    \item \textbf{Cross-Site Scripting (XSS):} Injeção de scripts no lado do cliente que comprometem sessões de usuários;
+    \item \textbf{Path Traversal:} Manipulação de caminhos de arquivos relativos (ex: \texttt{../../etc/passwd}) para acessar diretórios restritos do sistema hospedeiro;
+    \item \textbf{Execução Remota de Código (RCE):} Exploração de falhas em bibliotecas e interpretadores (como no caso das vulnerabilidades JNDI/Log4Shell) para executar binários arbitrários no servidor;
+    \item \textbf{Server-Side Request Forgery (SSRF):} Coação da aplicação para enviar requisições contra recursos internos protegidos, como a API de metadados da nuvem ou o soquete Docker local.
+\end{itemize}
+
+Para mitigar tais riscos de forma perimetral, empregam-se Web Application Firewalls (WAF) \cite{stallings2017}. Um WAF atua na Camada 7 do modelo OSI, inspecionando requisições HTTP antes de seu processamento pelos manipuladores da aplicação.
+
+Complementarmente, a segurança na camada do contêiner (\textit{Container Hardening}) exige a aplicação rigorosa do Princípio do Menor Privilégio (\textit{Principle of Least Privilege}). Isso abrange:
+\begin{enumerate}
+    \item A ativação da diretiva \texttt{no-new-privileges}, que bloqueia a elevação de privilégios via binários que possuam o bit SUID/SGID ativo no sistema de arquivos;
+    \item O isolamento intransigente do arquivo de soquete do daemon Docker (\texttt{/var/run/docker.sock}), cuja montagem indevida em contêineres de usuários concede controle root irrestrito sobre o sistema hospedeiro;
+    \item A imposição de limites no cgroup \texttt{pids.max}, impedindo a execução de ataques do tipo \textit{fork bomb} (tais como \texttt{:()\{ :|:\& \};:});
+    \item A ativação de filtros de chamadas de sistema (\textit{system calls}) via \textit{Seccomp} (Secure Computing Mode) no kernel.
+\end{enumerate}
+
+\subsection{Integridade Transacional ACID em Bancos de Dados Relacionais}
+\label{sec:propriedades-acid}
+
+O armazenamento confiável de dados de negócio requer o cumprimento irrestrito das propriedades ACID em sistemas gerenciadores de banco de dados relacionais (SGBDR) \cite{stonebraker1986,silberschatz2018}:
+\begin{itemize}
+    \item \textbf{Atomicidade (Atomicity):} Garante que todas as operações inseridas em uma transação lógica sejam executadas com sucesso (\textit{commit}) ou que todas as alterações sejam revertidas integralmente (\textit{rollback}) caso ocorra qualquer falha;
+    \item \textbf{Consistência (Consistency):} Assegura que uma transação leve o banco de dados de um estado válido a outro estado válido, respeitando regras declarativas, unicidade e chaves estrangeiras (\textit{Foreign Keys});
+    \item \textbf{Isolamento (Isolation):} Define como as modificações operadas por uma transação são visíveis a outras transações concorrentes. Níveis adequados de isolamento previnem anomalias clássicas como leituras sujas (\textit{Dirty Reads}), leituras não repetíveis e leituras fantasmas;
+    \item \textbf{Durabilidade (Durability):} Garante que, uma vez confirmada uma transação, seus efeitos persistam de forma definitiva no meio de armazenamento físico, mesmo diante de desligamentos abruptos ou falhas de energia, recorrendo a estruturas como o \textit{Write-Ahead Logging} (WAL).
+\end{itemize}
+
+Garantir e certificar essas propriedades quando os bancos de dados operam empacotados em contêineres com volumes de armazenamento mapeados é fundamental para atestar a viabilidade de uma plataforma PaaS em ambientes de produção.

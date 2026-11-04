@@ -1,0 +1,43 @@
+% ==============================================================================
+% CAPÍTULO 5 - CONSIDERAÇÕES FINAIS
+% ==============================================================================
+
+\section{Considerações Finais}
+\label{sec:consideracoes}
+
+O crescimento contínuo da virtualização por contêineres e a necessidade imperiosa de agilidade nos ciclos de entrega contínua impõem desafios complexos à gestão de infraestrutura de software. Pequenas e médias organizações, assim como instituições de ensino e pesquisa, frequentemente veem-se encurraladas entre os custos proibitivos e a dependência de provedores de nuvem pública (\textit{vendor lock-in}) e a complexidade desmedida de orquestradores corporativos de grande porte como o Kubernetes. Por outro lado, as alternativas PaaS de código aberto disponíveis no mercado frequentemente negligenciam a segurança defensiva na camada Web e os controles estritos de isolamento nos contêineres gerenciados.
+
+Frente a esse cenário, este Trabalho de Conclusão de Curso concebeu, implementou e avaliou empiricamente o \textbf{DeployDock}, uma plataforma PaaS autohospedada, leve e orientada a GitOps, integrada a uma suíte científica de testes e auditoria ponta a ponta.
+
+Os objetivos específicos propostos foram plenamente alcançados. A modelagem assíncrona em Python com FastAPI, SQLAlchemy e Traefik v3 viabilizou uma plataforma com tempo de resposta ágil e consumo de memória extremamente reduzido (apenas 79,2 MB em repouso). O orquestrador GitOps desenvolvido consolidou a automação do ciclo de deploy através de detecção automática de receitas de contêiner (\textit{Zero-Config}), cofre criptográfico Fernet para variáveis confidenciais e rotina de reversão automática (\textit{rollback}) instantânea frente a falhas de integridade.
+
+A validação empírica executada pela sonda autônoma (\textit{DeployDock Probe v2.2}) forneceu comprovação quantitativa rigorosa da eficácia do artefato. Com uma taxa de aprovação de \textbf{100,0\% nos 58 testes funcionais e de segurança E2E}, a plataforma demonstrou bloqueio efetivo de ataques de Injeção de SQL, XSS, Path Traversal e RCE/Log4j em nível de middleware (WAF), enquanto a imposição de limites de Cgroup (\texttt{pids.max=256} e bloqueio \texttt{no-new-privileges}) conferiu um índice de \textit{hardening} de 95/100 em ambiente Linux de produção. Adicionalmente, a bateria científica de 11 testes sobre o PostgreSQL 16 confirmou o cumprimento estrito das propriedades transacionais ACID (Atomicidade, Consistência, Isolamento e Durabilidade) sob contingências e concorrência, alcançando taxas superiores a 3.200 inserções em lote por segundo.
+
+\subsection{Contribuições da Pesquisa}
+\label{sec:contribuicoes}
+
+As principais contribuições deste trabalho incluem:
+\begin{itemize}
+    \item A disponibilização de um ecossistema PaaS de código aberto e autohospedado que reúne, em uma única solução enxuta, orquestração GitOps, roteamento dinâmico com certificados SSL automáticos e um WAF perimetral integrado;
+    \item A demonstração prática de que o endurecimento de segurança de contêineres e o ajuste dinâmico de quotas de hardware (CPU e RAM em tempo de execução) podem ser incorporados de forma transparente à experiência de desenvolvimento de software;
+    \item A criação e formalização de uma metodologia de auditoria e benchmark empírico sem dados simulados (\textit{zero mocks}), com relatórios assinados criptograficamente via SHA-256, apta a avaliar comparativamente qualquer orquestrador PaaS baseado em Docker.
+\end{itemize}
+
+\subsection{Limitações Identificadas}
+\label{sec:limitacoes}
+
+Não obstante os resultados positivos alcançados, destacam-se algumas limitações do projeto:
+\begin{itemize}
+    \item \textbf{Foco em Nó Único (\textit{Single-Node}):} A arquitetura atual foi projetada para execução em servidores dedicados ou máquinas virtuais isoladas, não contemplando nativamente orquestração distribuída entre múltiplos nós computacionais via protocolos de consenso (como Raft);
+    \item \textbf{Heurísticas Baseadas em Assinaturas no WAF:} O componente de filtragem de tráfego atua primordialmente por meio de expressões regulares e padrões conhecidos de ataque, carecendo de mecanismos de aprendizado de máquina para detecção comportamental de anomalias de tráfego de dia zero (\textit{zero-day}).
+\end{itemize}
+
+\subsection{Trabalhos Futuros}
+\label{sec:trabalhos-futuros}
+
+Como perspectivas para a continuidade e expansão desta pesquisa, propõem-se:
+\begin{enumerate}
+    \item O desenvolvimento de um módulo de alta disponibilidade e orquestração multinó distribuída utilizando canais de comunicação gRPC e consenso tolerante a falhas;
+    \item A integração com tecnologias de malha de serviços (\textit{Service Mesh}) para viabilizar autenticação mútua TLS (mTLS) de ponta a ponta entre todos os contêineres gerenciados da rede interna;
+    \item O aprimoramento do mecanismo de diagnóstico heurístico de falhas através da incorporação de modelos de inteligência artificial generativa locais para análise preditiva de telemetria e sugestão automática de reparos em arquivos de configuração de deploy.
+\end{enumerate}

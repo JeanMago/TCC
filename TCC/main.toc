@@ -1,0 +1,50 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\renewcommand {\numberline }[1]{}
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {section}{\MakeTextUppercase []{Apresentação}}{12}{section*.13}%
+\contentsline {section}{\MakeTextUppercase []{Resumo}}{13}{section*.15}%
+\contentsline {section}{\MakeTextUppercase []{Abstract}}{13}{section*.16}%
+\contentsline {section}{\numberline {1}Introdução}{15}{section.0.1}%
+\contentsline {subsection}{\numberline {1.1}Solução Proposta: DeployDock}{16}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {1.2}Objetivos da Pesquisa}{17}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {1.3}Estrutura do Documento}{17}{subsection.0.1.3}%
+\contentsline {section}{\numberline {2}Metodologia}{18}{section.0.2}%
+\contentsline {subsection}{\numberline {2.1}Etapas do Processo Metodológico}{18}{subsection.0.2.1}%
+\contentsline {subsection}{\numberline {2.2}Uso de Inteligência Artificial Generativa na Implementação do Projeto}{19}{subsection.0.2.2}%
+\contentsline {subsection}{\numberline {2.3}Delineamento Experimental e Procedimentos de Teste}{20}{subsection.0.2.3}%
+\contentsline {subsection}{\numberline {2.4}Ambientes de Teste e Infraestrutura}{20}{subsection.0.2.4}%
+\contentsline {section}{\numberline {3}Referencial Teórico}{21}{section.0.3}%
+\contentsline {subsection}{\numberline {3.1}Virtualização no Nível do Sistema Operacional e Contêineres}{21}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {3.2}Plataforma como Serviço (PaaS) e Filosofia GitOps}{22}{subsection.0.3.2}%
+\contentsline {subsection}{\numberline {3.3}Segurança Defensiva em Aplicações Web e Hardening de Contêineres}{23}{subsection.0.3.3}%
+\contentsline {subsection}{\numberline {3.4}Integridade Transacional ACID em Bancos de Dados Relacionais}{24}{subsection.0.3.4}%
+\contentsline {section}{\numberline {4}Desenvolvimento e Avaliação Empírica}{24}{section.0.4}%
+\contentsline {subsection}{\numberline {4.1}Arquitetura Geral do DeployDock}{24}{subsection.0.4.1}%
+\contentsline {subsection}{\numberline {4.2}Camada de Segurança Ativa e WAF (Security Shield)}{25}{subsection.0.4.2}%
+\contentsline {subsection}{\numberline {4.3}Orquestrador GitOps com Auto-Dockerfile e Rollback Instantâneo}{26}{subsection.0.4.3}%
+\contentsline {subsection}{\numberline {4.4}Terminal Web Protegido e Ajuste Dinâmico de Quotas}{27}{subsection.0.4.4}%
+\contentsline {subsection}{\numberline {4.5}Apresentação da Interface do Usuário}{27}{subsection.0.4.5}%
+\contentsline {subsection}{\numberline {4.6}Resultados e Discussão}{32}{subsection.0.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Validação Funcional e de Segurança E2E (58 Testes)}{32}{subsubsection.0.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Validação Científica das Propriedades ACID no PostgreSQL 16}{33}{subsubsection.0.4.6.2}%
+\contentsline {subsubsection}{\numberline {4.6.3}Benchmark de Estresse e Desempenho de Máquina (Intensidade Heavy)}{33}{subsubsection.0.4.6.3}%
+\contentsline {subsubsection}{\numberline {4.6.4}Matriz Comparativa com Plataformas Correlatas (PaaS Benchmark)}{34}{subsubsection.0.4.6.4}%
+\contentsline {section}{\numberline {5}Considerações Finais}{35}{section.0.5}%
+\contentsline {subsection}{\numberline {5.1}Contribuições da Pesquisa}{36}{subsection.0.5.1}%
+\contentsline {subsection}{\numberline {5.2}Limitações Identificadas}{36}{subsection.0.5.2}%
+\contentsline {subsection}{\numberline {5.3}Trabalhos Futuros}{37}{subsection.0.5.3}%
+\vspace {\cftbeforechapterskip }
+\contentsline {section}{\MakeTextUppercase []{Refer\^encias}}{38}{section*.31}%
+\cftinsert {AAA}
+\renewcommand *{\cftappendixname }{ANEXO \space }
+\contentsline {section}{\numberline {A}Estrutura do Esquema de Dados do Laudo de Auditoria (JSON)}{40}{section.anexochapback.0.1}%
+\contentsline {section}{\numberline {B}Critérios de Ponderação do Catálogo de Funcionalidades PaaS}{42}{section.anexochapback.0.2}%
+\renewcommand *{\cftappendixname }{AP\^ENDICE \space }
+\contentsline {section}{\numberline {A}Catálogo dos Casos de Teste E2E da Sonda de Auditoria}{43}{section.Alph0.1}%

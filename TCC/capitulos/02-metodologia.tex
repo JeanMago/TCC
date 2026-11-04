@@ -1,0 +1,68 @@
+% ==============================================================================
+% CAPÍTULO 2 - METODOLOGIA
+% ==============================================================================
+
+\section{Metodologia}
+\label{sec:metodologia}
+
+Para responder à questão de pesquisa e concretizar os objetivos propostos, este trabalho adota uma abordagem de \textbf{pesquisa aplicada}, com natureza predominantemente \textbf{quantitativa e experimental}, estruturada metodologicamente sob as diretrizes da \textit{Design Science Research} (DSR). Conforme preceituado na literatura clássica de Engenharia de Software \cite{pressman2014,sommerville2011}, a DSR fornece um referencial sistemático para projetar, construir e avaliar artefatos computacionais que apresentem soluções inovadoras e eficazes para problemas operacionais reais.
+
+Nesta pesquisa, o artefato primário desenvolvido é a plataforma PaaS \textbf{DeployDock}, enquanto o artefato instrumental de avaliação é a sonda autônoma \textbf{DeployDock Multi-Model Benchmark \& PaaS Tester Probe v2.2}.
+
+\subsection{Etapas do Processo Metodológico}
+\label{sec:etapas-metodologia}
+
+O ciclo de vida metodológico foi estruturado em cinco fases iterativas:
+
+\begin{enumerate}
+    \item \textbf{Fase 1: Conscientização do Problema e Levantamento de Requisitos:} Identificação das lacunas de segurança (ausência de WAF nativo), vulnerabilidades de contêineres (falta de limites de PIDs e ausência de bloqueio de novos privilégios) e sobrecarga de memória presentes nas soluções PaaS de código aberto consolidadas (CapRover, Coolify v4 e Dokploy);
+    \item \textbf{Fase 2: Concepção Arquitetural e Modelagem Teórica:} Definição do modelo em camadas, especificando a separação entre a API REST assíncrona, o motor de eventos WebSockets, o proxy reverso Traefik v3 com suporte a certificados curinga e o cofre criptográfico para armazenamento de segredos;
+    \item \textbf{Fase 3: Engenharia e Implementação de Software com Suporte de Inteligência Artificial:} Codificação modular do núcleo do sistema em Python assíncrono (FastAPI), utilizando agentes e assistentes de Inteligência Artificial Generativa para apoiar a síntese de algoritmos defensivos, padrões de expressão regular e esteiras de teste;
+    \item \textbf{Fase 4: Construção da Sonda de Testes e Instrumentação Autônoma:} Desenvolvimento do aplicativo de auditoria empírica sem dependência de dados mockados (\textit{zero mocks}), com coleta em tempo real de métricas de kernel, chamadas de sistema e estresse multivariado;
+    \item \textbf{Fase 5: Execução Experimental, Análise Estatística e Avaliação Comparativa:} Submissão do artefato a baterias exaustivas em ambientes computacionais heterogêneos (Nuvem corporativa e estação de trabalho local), consolidando a validação funcional, a conformidade ACID e os índices comparativos de mercado.
+\end{enumerate}
+
+\subsection{Uso de Inteligência Artificial Generativa na Implementação do Projeto}
+\label{sec:uso-ia-implementacao}
+
+O processo de engenharia de software do ecossistema DeployDock adotou o paradigma do desenvolvimento aumentado por inteligência artificial (\textit{AI-Augmented Software Engineering}). Modelos de linguagem de grande porte (LLMs) foram utilizados de forma estruturada como copilotos de programação sob demanda, acelerando o ciclo de implementação nas seguintes frentes técnicas:
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Engenharia de Expressões Regulares para o WAF:} Auxílio no desenho de padrões regex resilientes a técnicas de ofuscação com codificação URL para detecção precisa de Injeção de SQL (incluindo assinaturas cegas temporais como \texttt{pg\_sleep} e \texttt{WAITFOR}), Cross-Site Scripting contextual, travessia de pastas em múltiplos sistemas operacionais (padrões Linux \texttt{../../} e Windows \texttt{..\\..\\}) e assinaturas de execução remota de código (RCE em bibliotecas Java/Log4j e vetores de \textit{reverse shell});
+    \item \textbf{Geração de Receitas de Contêineres (Auto-Dockerfile):} Elaboração e refinamento dos algoritmos heurísticos de detecção de stacks de desenvolvimento (\textit{Zero-Config}), permitindo a síntese dinâmica de arquivos Dockerfile multi-estágio otimizados para nove ecossistemas tecnológicos (Python, Node.js, Bun, Go, Rust, PHP/Laravel, Ruby on Rails, Java e .NET C\#);
+    \item \textbf{Construção da Suíte de 58 Casos de Teste E2E:} Automação e modelagem de asserções em código assíncrono cobrindo fluxos completos de autenticação OAuth2, geração e validação de tokens JWT, testes de privilégios RBAC com usuários restritos, validação de 2FA TOTP (RFC 6238) e manipulação do sistema de arquivos via explorador de contêiner;
+    \item \textbf{Modelagem da Bateria Científica Transacional do PostgreSQL 16:} Elaboração de rotinas assíncronas concorrentes para indução forçada de violação de restrições relacionais com verificação de \textit{rollback} integral, validação de chaves estrangeiras e cálculo de percentis de latência transacional (P50, P95 e P99);
+    \item \textbf{Estruturação dos Benchmarks de Estresse Computacional:} Implementação de laços intensivos de cálculo de multiplicação matricial para aferição de ponto flutuante em MFLOPS, hashing paralelo SHA-256 e rotinas de alocação de memória e I/O síncrono (\texttt{fsync}).
+\end{enumerate}
+
+Ressalta-se que a totalidade dos trechos de código e testes gerados com apoio de ferramentas de IA passou por rigorosa curadoria humana, análise estática de tipos, depuração manual e execução empírica supervisionada pelos autores, garantindo a integridade científica e a conformidade arquitetural do sistema.
+
+\subsection{Delineamento Experimental e Procedimentos de Teste}
+\label{sec:procedimentos-teste}
+
+A validação empírica da plataforma foi delineada segundo critérios objetivos de mensuração, sem simulação ou geração sintética de dados. Foram executadas três baterias experimentais coordenadas:
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Bateria Funcional e de Segurança E2E (58 Testes):} Conjunto de 58 asserções automatizadas que verificam a integridade dos contratos de API e a eficácia das defesas perimetrais. Cada teste registra o status (\textit{PASSED} ou \textit{FAILED}), o tempo de resposta em milissegundos e a evidência textual da resposta do servidor (código HTTP, cabeçalhos e corpo);
+    \item \textbf{Bateria Científica de Banco de Dados Relacional (PostgreSQL 16):} Composta por 11 testes rigorosos projetados para atestar as propriedades ACID sob contêineres:
+    \begin{itemize}
+        \item \textit{Atomicidade:} confirmação de reversão total do estado (\textit{rollback}) após falha intencional provocada por violação de restrição \texttt{CHECK};
+        \item \textit{Consistência:} garantia da integridade referencial com validação estrita de integridade entre chaves estrangeiras;
+        \item \textit{Isolamento:} verificação de transações simultâneas concorrentes comprovando a ausência de leituras sujas (\textit{Dirty Reads});
+        \item \textit{Durabilidade:} comprovação de escrita sincronizada permanente no log de pré-gravação (\textit{Write-Ahead Logging} -- WAL);
+        \item \textit{Throughput e Carga Transacional:} avaliação de vazão em inserções em lote (\textit{Bulk Insert}) de 5.000 registros, vazão transacional (TPS) sob paralelismo e estresse do pool assíncrono de conexões;
+    \end{itemize}
+    \item \textbf{Bateria de Estresse de Máquina (Intensidade Heavy):} Rotinas de carga máxima mensurando operações criptográficas por segundo (CPU Single e Multi-Core), poder computacional em MFLOPS, taxa de transferência de memória RAM (MB/s), escrita em disco com sincronização forçada (\texttt{fsync}), leitura em bloco, IOPS randômicos 4K e concorrência HTTP em conexões paralelas.
+\end{enumerate}
+
+\subsection{Ambientes de Teste e Infraestrutura}
+\label{sec:ambientes-teste}
+
+Para atestar a portabilidade e a robustez do DeployDock sob condições heterogêneas de kernel e hardware, os experimentos foram replicados em dois ambientes operacionais complementares:
+
+\begin{itemize}
+    \item \textbf{Ambiente A (Nuvem / Produção Linux Corporativo):} Servidor em nuvem executando Linux com Kernel \texttt{5.15.0-1081-oracle-x86\_64}, arquitetura \texttt{x86\_64}, com 2 vCPUs dedicadas e contêiner da plataforma restrito via Cgroup v1 com quota de 952,0 MB de memória RAM e limite rígido de \texttt{pids.max=256}. A plataforma foi exposta com terminação SSL/TLS via Traefik v3;
+    \item \textbf{Ambiente B (Estação de Desenvolvimento Local):} Máquina de alto paralelismo equipada com processador AMD64 de 12 núcleos, 24 GB de memória RAM física e sistema operacional Windows 11 (Kernel NT 10.0.26200), permitindo avaliar a vazão máxima de I/O em disco de estado sólido NVMe e a portabilidade do interpretador Python assíncrono.
+\end{itemize}
+
+Todos os dados exportados pela sonda de testes foram consolidados em arquivos estruturados assinados digitalmente com o algoritmo SHA-256, assegurando rastreabilidade, reprodutibilidade e autenticidade às conclusões apresentadas.

@@ -1,0 +1,49 @@
+% ==============================================================================
+% ANEXO A - ESTRUTURA DO LAUDO DE AUDITORIA EMPÍRICA (JSON SCHEMA)
+% ==============================================================================
+
+\section{Estrutura do Esquema de Dados do Laudo de Auditoria (JSON)}
+\label{anx:anexo-a}
+
+Este anexo apresenta a especificação sintática dos campos estruturados contidos no arquivo de \textit{snapshot} exportado pela sonda autônoma de testes (\texttt{tested deploydock.json}), utilizado como base documental para a compilação das análises deste trabalho.
+
+\begin{lstlisting}[language=Python, caption={Estrutura de dados representativa do documento de laudo técnico em formato JSON}, label={lst:json-schema}]
+{
+  "report_id": "bench-1793674198",
+  "generated_at": "2026-11-03T02:49:58.647282+00:00",
+  "audit_duration_ms": 36332.1,
+  "executed_on_demand": true,
+  "orchestrator": {
+    "platform_name": "DeployDock",
+    "running_in_container": true,
+    "reverse_proxy_detected": true,
+    "forwarded_proto": "https"
+  },
+  "cgroups": {
+    "cgroup_version": "v1",
+    "pids_quota_active": true,
+    "pids_limit": 256,
+    "pids_current": 9
+  },
+  "security": {
+    "hardening_score": 95,
+    "no_new_privileges": true,
+    "seccomp_active": true,
+    "docker_socket_mounted": false,
+    "cap_sys_admin": false
+  },
+  "performance": {
+    "intensity": "heavy",
+    "composite_performance_score": 51,
+    "cpu": { "cpu_ops_per_sec": 3913075, "floating_point_mflops": 4.42 },
+    "memory": { "memory_throughput_mb_s": 117.69 },
+    "disk_io": { "write_speed_mb_s": 43.99, "read_speed_mb_s": 2159.29, "random_4k_iops": 7052 },
+    "network_concurrency": { "requests_per_sec": 613, "latency_p50_ms": 4.23 }
+  },
+  "deploydock_e2e": {
+    "total_tests": 58,
+    "passed_tests": 58,
+    "pass_rate_percent": 100.0
+  }
+}
+\end{lstlisting}
